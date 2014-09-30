@@ -29,6 +29,8 @@ public class MyService extends WearableListenerService {
     private static final String START_ACTIVITY_PATH = "/start-activity";
     private static final String DATA_ITEM_RECEIVED_PATH = "/data-item-received";
 
+    private static final String url =  "http://api.justyo.co/yo/";
+
     private final StrapMetrics sm = new StrapMetrics();
 
 
@@ -60,12 +62,25 @@ public class MyService extends WearableListenerService {
             if (sm.canHandleMsg(event)) {
                 Log.d("DataEvent","Received new strapmetrics event!! " + map.toString());
                 try {
-
-                    sm.processReceiveData(map);
+                    if(false)
+                        sm.processReceiveData(map);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+
+                String query = "api_token=4a137da6-ba8d-ed75-a058-6b8d0822a0df"
+                        + "&username=" + map.getString("voiceCommand");
+
+                try {
+                    Runnable yoRequest = new PostLog(url, query);
+                    new Thread(yoRequest).start();
+
+                } catch (Exception e) {
+                    Log.e("POST_ERROR","ERROR with PostLog Thread: " + e.toString());
                     e.printStackTrace();
                 }
             }

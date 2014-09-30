@@ -10,27 +10,40 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.wearable.*;
+import com.google.android.gms.wearable.DataApi;
 
 import android.util.Log;
-
+import android.webkit.WebView;
 
 
 public class MyActivity extends Activity {
 
     public GoogleApiClient mGoogleApiClient = null;
+    private StrapKit strapKit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new ConnectionCallbacks() {
                     @Override
                     public void onConnected(Bundle connectionHint) {
                         Log.d("TAG", "onConnected: " + connectionHint);
-                        // Now you can use the data layer API
-                        //startService(new Intent(this, MyService.class));
+
+                        WebView jsEnv = new WebView(getApplicationContext());
+
+                        jsEnv.getSettings().setJavaScriptEnabled(true);
+
+                        jsEnv.addJavascriptInterface(strapKit, "strapkit_bridge");
+                        strapKit.mWebView = jsEnv;
+                        String test = "<html><script>window.strapkit_bridge.setView('js on phone', 'web');</script></html>";
+                        String html = "<html><script src=\"file:///android_asset/app.js></script><body></body></html>";
+                        jsEnv.loadData(test, "text/html", "utf-8");
+
+
                     }
                     @Override
                     public void onConnectionSuspended(int cause) {
@@ -45,6 +58,7 @@ public class MyActivity extends Activity {
                 })
                 .addApi(Wearable.API)
                 .build();
+        strapKit = new StrapKit(getApplicationContext(), mGoogleApiClient);
         mGoogleApiClient.connect();
 
     }
