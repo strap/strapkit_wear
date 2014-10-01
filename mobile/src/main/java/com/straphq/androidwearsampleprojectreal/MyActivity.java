@@ -41,8 +41,10 @@ public class MyActivity extends Activity {
                         strapKit.mWebView = jsEnv;
                         String test = "<html><script>window.strapkit_bridge.setView('js on phone', 'web');</script></html>";
                         String html = "<html><script src=\"file:///android_asset/app.js></script><body></body></html>";
-                        jsEnv.loadData(test, "text/html", "utf-8");
+                        //jsEnv.loadData(test, "text/html", "utf-8");
 
+                        StrapKit_Test tester = new StrapKit_Test(strapKit);
+                        tester.basicView();
 
                     }
                     @Override
@@ -60,6 +62,7 @@ public class MyActivity extends Activity {
                 .build();
         strapKit = new StrapKit(getApplicationContext(), mGoogleApiClient);
         mGoogleApiClient.connect();
+        Wearable.DataApi.addListener(mGoogleApiClient, strapKit);
 
     }
 

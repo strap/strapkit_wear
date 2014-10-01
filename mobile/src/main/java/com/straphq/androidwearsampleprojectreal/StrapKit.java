@@ -10,9 +10,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.common.api.PendingResult;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Date;
+import java.util.ArrayList;
 /**
  * Created by jonahback on 9/19/14.
  */
@@ -25,18 +28,53 @@ public class StrapKit implements DataApi.DataListener {
     StrapKit(Context c, GoogleApiClient mGoogleApiClient) {
         mContext = c;
         this.mGoogleApiClient = mGoogleApiClient;
+
+
+    }
+
+    @JavascriptInterface
+    public void setListView(String title, String viewID, String listJSON) {
+        JSONArray listItems = null;
+        ArrayList<String> listStrings = new ArrayList<String>();
+        try {
+            listItems = new JSONArray(listJSON);
+        } catch (JSONException e) {
+
+        }
+
+        if(listItems != null) {
+
+            for(int i=0; i>listItems.length(); i++) {
+                try{
+                    JSONObject data = listItems.getJSONObject(i);
+                    listStrings.add(data.getString("text"));
+                 } catch (JSONException e) {
+
+                }
+            }
+
+            PutDataMapRequest dataMap = PutDataMapRequest.create("/views/" + viewID);
+            dataMap.getDataMap().putString("id", viewID);
+            dataMap.getDataMap().putString("date", new Date().toString());
+            dataMap.getDataMap().putStringArrayList("listItems", listStrings);
+            dataMap.getDataMap().putInt("type", 2);
+        }
     }
 
     /** Show a toast from the web page */
     @JavascriptInterface
-    public void setView(String viewText, String viewID) {
+    public void setTextView(String viewText, String viewID) {
         try {
             JSONObject viewJSON = new JSONObject();
             System.out.print(viewID);
 
             PutDataMapRequest dataMap = PutDataMapRequest.create("/views/" + viewID);
+            dataMap.getDataMap().putString("id", viewID);
             dataMap.getDataMap().putString("title", viewText);
             dataMap.getDataMap().putString("date", new Date().toString());
+            dataMap.getDataMap().putInt("type", 1);
+
+
             PutDataRequest request = dataMap.asPutDataRequest();
             PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
                     .putDataItem(mGoogleApiClient, request);
@@ -53,7 +91,8 @@ public class StrapKit implements DataApi.DataListener {
     @Override
     public void onDataChanged(DataEventBuffer buffer) {
         for(DataEvent evt : buffer) {
-            if(evt.getDataItem().getUri().getPathSegments().get(1).matches("onTouch")) {
+            if(evt.getDataItem().getUri().getPathSegments().get(0).equals("onTouch")) {
+
                 mWebView.loadUrl("javascript:strapkit.onTouch(1, 'blahdata')");
             }
         }

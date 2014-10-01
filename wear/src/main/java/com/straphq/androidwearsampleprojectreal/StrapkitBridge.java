@@ -2,9 +2,12 @@ package com.straphq.androidwearsampleprojectreal;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataItemBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -29,10 +32,32 @@ public class StrapkitBridge implements DataApi.DataListener{
         mGoogleApiClient = apiClient;
         this.activity = activity;
         mGoogleApiClient.connect();
+
+        initializeView();
+    }
+
+    private void initializeView() {
+        PendingResult<DataItemBuffer> results = Wearable.DataApi.getDataItems(mGoogleApiClient);
+        results.setResultCallback(new ResultCallback<DataItemBuffer>() {
+            @Override
+            public void onResult(DataItemBuffer dataItems) {
+                for(DataItem item : dataItems) {
+                    DataMapItem dataMapItem = DataMapItem.fromDataItem(item);
+
+                    if(dataMapItem.getUri().getPathSegments().get(0).equals("views")) {
+                        activity.updateView(new StrapkitView(dataMapItem.getDataMap()));
+                    }
+
+                }
+
+                dataItems.release();
+            }
+        });
     }
 
     public void onTouch(String viewID) {
-        PutDataMapRequest dataMap = PutDataMapRequest.create("/views/" + viewID + "/onTouch");
+        PutDataMapRequest dataMap = PutDataMapRequest.create("/onTouch");
+        dataMap.getDataMap().putString("id", viewID);
         dataMap.getDataMap().putString("date", new Date().toString());
         PutDataRequest request = dataMap.asPutDataRequest();
         PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
@@ -44,8 +69,7 @@ public class StrapkitBridge implements DataApi.DataListener{
             DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
             DataMap map = dataMapItem.getDataMap();
             if(event.getDataItem().getUri().getPathSegments().get(0).equals("views")) {
-                StrapkitView v = new StrapkitView(event.getDataItem().getUri().getPathSegments().get(1));
-                v.setTitle(map.getString("title"));
+                StrapkitView v = new StrapkitView(map);
 
                 activity.updateView(v);
             }
