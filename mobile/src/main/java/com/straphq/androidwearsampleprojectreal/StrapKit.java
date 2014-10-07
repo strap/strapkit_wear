@@ -17,6 +17,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Date;
 import java.util.ArrayList;
+
+import com.straphq.wear_sdk.StrapMetrics;
+
 /**
  * Created by jonahback on 9/19/14.
  */
@@ -25,14 +28,34 @@ public class StrapKit implements DataApi.DataListener {
     GoogleApiClient mGoogleApiClient;
     WebView mWebView;
     private Handler handler = new Handler();
+    private StrapMetrics metrics;
+
+    boolean metricsEnabled = false;
 
 
     /** Instantiate the interface and set the context */
     StrapKit(Context c, GoogleApiClient mGoogleApiClient) {
         mContext = c;
         this.mGoogleApiClient = mGoogleApiClient;
+        metrics = new StrapMetrics();
 
+    }
 
+    @JavascriptInterface
+    public void strapMetricsInit(String appID) {
+        metrics.initFromPhone(appID);
+        metricsEnabled = true;
+    }
+
+    @JavascriptInterface
+    public void strapMetricsLogEvent(String event, String cvar) {
+        JSONObject cvarData = null;
+        try {
+            cvarData = new JSONObject(cvar);
+        } catch (JSONException e) {
+
+        }
+        metrics.logEvent(event, cvarData);
     }
 
     @JavascriptInterface
@@ -98,6 +121,15 @@ public class StrapKit implements DataApi.DataListener {
     @Override
     public void onDataChanged(DataEventBuffer buffer) {
         for(DataEvent evt : buffer) {
+
+            if(metricsEnabled && metrics.canHandleMsg(evt)) {
+                try {
+                    metrics.processReceiveData(DataMapItem.fromDataItem(evt.getDataItem()).getDataMap());
+                } catch (Exception e) {
+
+                }
+            }
+
             if(evt.getDataItem().getUri().getPathSegments().get(0).equals("onTouch")) {
 
                 DataItem item = evt.getDataItem();
@@ -111,6 +143,8 @@ public class StrapKit implements DataApi.DataListener {
                 });
                 //this.setListView("This is a list", "dumID", "[{text:'one'},{text:'two'}]");
             }
+
+
         }
     }
 }

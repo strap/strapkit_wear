@@ -46,6 +46,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
         onTouchListener = this;
 
 
+
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
@@ -80,7 +81,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
 
         bridge = new StrapkitBridge(mGoogleApiClient, listener);
 
-
+        strap = new Strap(mGoogleApiClient, getApplicationContext(), "");
 
     }
 

@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.Status;
 import android.util.Log;
 import android.webkit.WebView;
 
+import com.straphq.wear_sdk.StrapMetrics;
 
 public class MyActivity extends Activity {
 

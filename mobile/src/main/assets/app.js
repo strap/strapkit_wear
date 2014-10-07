@@ -32,6 +32,18 @@ var listView = function(items, subView, id, onTouch) {
 };
 
 window.strapkit = {
+
+  strapmetrics: {
+    init: function(appID) {
+      window.strapkit_bridge.strapMetricsInit(appID);
+
+    },
+
+    logEvent: function(evt, data) {
+      window.strapkit_bridge.strapMetricsLogEvent(evt, JSON.stringify(data));
+    }
+  },
+
   views: [],
 
   setTextView: function(view) {
@@ -53,11 +65,13 @@ window.strapkit = {
 
 };
 var times = 0;
+strapkit.strapmetrics.init("tSGpQgSgjYZisap2o");
 
 var textvw = new textView("Hello, Strapkit!", null, 'strapkit_init', function() {
-              times++;
-              this.text = "You clicked it " +times + " times!";
-              strapkit.setTextView(this);
+  times++;
+  this.text = "You clicked it " +times + " times!";
+  strapkit.setTextView(this);
+  strapkit.strapmetrics.logEvent("/click", {times: times});
 });
 
 var view = new View("Hello, JS World!",null, "4", function(evt) {
