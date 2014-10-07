@@ -5,13 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.*;
 import com.google.android.gms.wearable.DataApi;
-
+import com.google.android.gms.common.api.Status;
 import android.util.Log;
 import android.webkit.WebView;
 
@@ -33,18 +36,28 @@ public class MyActivity extends Activity {
                     public void onConnected(Bundle connectionHint) {
                         Log.d("TAG", "onConnected: " + connectionHint);
 
-                        WebView jsEnv = new WebView(getApplicationContext());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                strapKit = new StrapKit(getApplicationContext(), mGoogleApiClient);
+                                Wearable.DataApi.addListener(mGoogleApiClient, strapKit);
 
-                        jsEnv.getSettings().setJavaScriptEnabled(true);
 
-                        jsEnv.addJavascriptInterface(strapKit, "strapkit_bridge");
-                        strapKit.mWebView = jsEnv;
-                        String test = "<html><script>window.strapkit_bridge.setView('js on phone', 'web');</script></html>";
-                        String html = "<html><script src=\"file:///android_asset/app.js></script><body></body></html>";
-                        //jsEnv.loadData(test, "text/html", "utf-8");
+                                WebView jsEnv = new WebView(getApplicationContext());
 
-                        StrapKit_Test tester = new StrapKit_Test(strapKit);
-                        tester.basicView();
+                                jsEnv.getSettings().setJavaScriptEnabled(true);
+
+                                jsEnv.addJavascriptInterface(strapKit, "strapkit_bridge");
+                                strapKit.mWebView = jsEnv;
+                                //String test = "<html><script>window.strapkit_bridge.setTextView('js on phone', 'web');</script></html>";
+                                String html = "<html><script src=\"file:///android_asset/app.js\"></script><body></body></html>";
+                                jsEnv.loadDataWithBaseURL("file:////android_asset/", html, "text/html", "utf-8", "");
+                                //jsEnv.loadData(html, "text/html", "utf-8");
+
+                                StrapKit_Test tester = new StrapKit_Test(strapKit);
+                                //tester.listView();
+                            }
+                        });
 
                     }
                     @Override
@@ -60,9 +73,9 @@ public class MyActivity extends Activity {
                 })
                 .addApi(Wearable.API)
                 .build();
-        strapKit = new StrapKit(getApplicationContext(), mGoogleApiClient);
+
         mGoogleApiClient.connect();
-        Wearable.DataApi.addListener(mGoogleApiClient, strapKit);
+
 
     }
 

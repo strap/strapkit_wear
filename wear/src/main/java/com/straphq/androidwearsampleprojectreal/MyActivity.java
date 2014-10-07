@@ -80,6 +80,8 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
 
         bridge = new StrapkitBridge(mGoogleApiClient, listener);
 
+
+
     }
 
     public void updateView(final StrapkitView v) {
@@ -88,6 +90,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
             public void run() {
                 LinearLayout layout = new LinearLayout(getApplicationContext());
                 if(v.getType() == 1) {
+
                     TextView textView = new TextView(getApplicationContext());
                     textView.setText(v.getTitle());
                     textView.setTag(v.getId());
@@ -105,6 +108,13 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
                     WearableListView listView = new WearableListView(getApplicationContext());
                     listView.setGreedyTouchMode(true);
                     listView.setAdapter(new StrapkitListAdapter(getApplicationContext(),list));
+
+                    listView.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.FILL_PARENT,
+                            LinearLayout.LayoutParams.FILL_PARENT));
+
+
+
                     layout.addView(listView);
 
                 }

@@ -45,7 +45,15 @@ public class StrapkitBridge implements DataApi.DataListener{
                     DataMapItem dataMapItem = DataMapItem.fromDataItem(item);
 
                     if(dataMapItem.getUri().getPathSegments().get(0).equals("views")) {
-                        activity.updateView(new StrapkitView(dataMapItem.getDataMap()));
+
+                        StrapkitView v = new StrapkitView(dataMapItem.getDataMap());
+
+                        if(v.getType() == 2) {
+                            v = new StrapkitListView(dataMapItem.getDataMap());
+                        }
+
+                        activity.updateView(v);
+
                     }
 
                 }
@@ -62,6 +70,8 @@ public class StrapkitBridge implements DataApi.DataListener{
         PutDataRequest request = dataMap.asPutDataRequest();
         PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
                 .putDataItem(mGoogleApiClient, request);
+
+
     }
 
     public void onDataChanged(DataEventBuffer buffer) {
@@ -69,7 +79,13 @@ public class StrapkitBridge implements DataApi.DataListener{
             DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
             DataMap map = dataMapItem.getDataMap();
             if(event.getDataItem().getUri().getPathSegments().get(0).equals("views")) {
+
+
                 StrapkitView v = new StrapkitView(map);
+
+                if(v.getType() == 2) {
+                    v = new StrapkitListView(map);
+                }
 
                 activity.updateView(v);
             }

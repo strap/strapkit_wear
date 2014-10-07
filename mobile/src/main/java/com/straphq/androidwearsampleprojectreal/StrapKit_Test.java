@@ -11,7 +11,12 @@ public class StrapKit_Test {
     }
 
     public void basicView() {
-        strapKit.setView("Strapkit_Test", "someID");
+        strapKit.setTextView("Strapkit_Test", "someID");
+
+    }
+
+    public void listView() {
+        strapKit.setListView("This is a list", "dumID", "[{text:'one'},{text:'two'}]");
     }
 
 }

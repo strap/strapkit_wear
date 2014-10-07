@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface;
 import android.content.Context;
 import android.webkit.WebView;
 import android.util.Log;
+import android.os.Handler;
 
 import com.google.android.gms.wearable.*;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,6 +24,8 @@ public class StrapKit implements DataApi.DataListener {
     Context mContext;
     GoogleApiClient mGoogleApiClient;
     WebView mWebView;
+    private Handler handler = new Handler();
+
 
     /** Instantiate the interface and set the context */
     StrapKit(Context c, GoogleApiClient mGoogleApiClient) {
@@ -44,7 +47,7 @@ public class StrapKit implements DataApi.DataListener {
 
         if(listItems != null) {
 
-            for(int i=0; i>listItems.length(); i++) {
+            for(int i=0; i<listItems.length(); i++) {
                 try{
                     JSONObject data = listItems.getJSONObject(i);
                     listStrings.add(data.getString("text"));
@@ -58,6 +61,10 @@ public class StrapKit implements DataApi.DataListener {
             dataMap.getDataMap().putString("date", new Date().toString());
             dataMap.getDataMap().putStringArrayList("listItems", listStrings);
             dataMap.getDataMap().putInt("type", 2);
+
+            PutDataRequest request = dataMap.asPutDataRequest();
+            PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+                    .putDataItem(mGoogleApiClient, request);
         }
     }
 
@@ -93,7 +100,16 @@ public class StrapKit implements DataApi.DataListener {
         for(DataEvent evt : buffer) {
             if(evt.getDataItem().getUri().getPathSegments().get(0).equals("onTouch")) {
 
-                mWebView.loadUrl("javascript:strapkit.onTouch(1, 'blahdata')");
+                DataItem item = evt.getDataItem();
+                DataMap map = DataMapItem.fromDataItem(item).getDataMap();
+                final String viewID = map.getString("id");
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl("javascript:strapkit.onTouch('" + viewID + "', 'blahdata')");
+                    }
+                });
+                //this.setListView("This is a list", "dumID", "[{text:'one'},{text:'two'}]");
             }
         }
     }
