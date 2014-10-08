@@ -49,9 +49,10 @@ public class MyActivity extends Activity {
                                 jsEnv.getSettings().setJavaScriptEnabled(true);
 
                                 jsEnv.addJavascriptInterface(strapKit, "strapkit_bridge");
+                                jsEnv.setWebChromeClient(new StrapKitCrashReporter());
                                 strapKit.mWebView = jsEnv;
                                 //String test = "<html><script>window.strapkit_bridge.setTextView('js on phone', 'web');</script></html>";
-                                String html = "<html><script src=\"file:///android_asset/app.js\"></script><body></body></html>";
+                                String html = "<html><script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js\"></script><script src=\"file:///android_asset/strapkit.js\"></script><script src=\"file:///android_asset/app.js\"></script><body></body></html>";
                                 jsEnv.loadDataWithBaseURL("file:////android_asset/", html, "text/html", "utf-8", "");
                                 //jsEnv.loadData(html, "text/html", "utf-8");
 
@@ -76,8 +77,6 @@ public class MyActivity extends Activity {
                 .build();
 
         mGoogleApiClient.connect();
-
-
     }
 
 

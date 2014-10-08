@@ -41,6 +41,10 @@ public class StrapKit implements DataApi.DataListener {
 
     }
 
+  //JS Interface methods
+
+
+    //StrapMetrics methods
     @JavascriptInterface
     public void strapMetricsInit(String appID) {
         metrics.initFromPhone(appID);
@@ -91,11 +95,10 @@ public class StrapKit implements DataApi.DataListener {
         }
     }
 
-    /** Show a toast from the web page */
     @JavascriptInterface
     public void setTextView(String viewText, String viewID) {
         try {
-            JSONObject viewJSON = new JSONObject();
+             JSONObject viewJSON = new JSONObject();
             System.out.print(viewID);
 
             PutDataMapRequest dataMap = PutDataMapRequest.create("/views/" + viewID);
@@ -115,8 +118,32 @@ public class StrapKit implements DataApi.DataListener {
 
     }
 
+    //Sensor methods
+
+    //Android-specific methods
+    @JavascriptInterface
+    public void  confirmActivity(String message) {
+        PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/confirmActivity");
+        dataMapRequest.getDataMap().putString("message", message);
+        dataMapRequest.getDataMap().putString("date", new Date().toString());
+
+        PutDataRequest request = dataMapRequest.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+                .putDataItem(mGoogleApiClient, request);
+    }
+
     public void log(String msg) {
         Log.d("Strapkit", msg);
+    }
+
+    //Wear methods
+    public void onTouch(final String viewID) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl("javascript:strapkit.onTouch('" + viewID + "', 'blahdata')");
+            }
+        });
     }
     @Override
     public void onDataChanged(DataEventBuffer buffer) {
@@ -130,21 +157,26 @@ public class StrapKit implements DataApi.DataListener {
                 }
             }
 
+            if(evt.getDataItem().getUri().getPathSegments().get(0).equals("strapkitInit")) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl("javascript:strapkit.init()");
+                    }
+                });
+            }
+
             if(evt.getDataItem().getUri().getPathSegments().get(0).equals("onTouch")) {
 
                 DataItem item = evt.getDataItem();
                 DataMap map = DataMapItem.fromDataItem(item).getDataMap();
                 final String viewID = map.getString("id");
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.loadUrl("javascript:strapkit.onTouch('" + viewID + "', 'blahdata')");
-                    }
-                });
-                //this.setListView("This is a list", "dumID", "[{text:'one'},{text:'two'}]");
+                onTouch(viewID);
+
             }
 
 
         }
+        buffer.release();
     }
 }

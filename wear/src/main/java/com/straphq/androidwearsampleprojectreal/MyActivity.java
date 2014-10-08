@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.content.Intent;
+import android.support.wearable.activity.ConfirmationActivity;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.wearable.*;
 import com.google.android.gms.wearable.DataApi;
@@ -63,7 +66,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
                     public void onConnected(Bundle connectionHint) {
                         Log.d("TAG", "onConnected: " + connectionHint);
                         //strap.logEvent("/app/started");
-                        Wearable.DataApi.addListener(mGoogleApiClient, bridge);
+
                     }
                     @Override
                     public void onConnectionSuspended(int cause) {
@@ -114,12 +117,9 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
                             LinearLayout.LayoutParams.FILL_PARENT,
                             LinearLayout.LayoutParams.FILL_PARENT));
 
-
-
                     layout.addView(listView);
 
                 }
-
                 setContentView(layout);
             }
         });
@@ -129,6 +129,16 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
         String viewID = (String)v.getTag();
         bridge.onTouch(viewID);
         return true;
+    }
+
+    //Shows success message
+    public void confirmActivity(String message) {
+        Intent intent = new Intent(MyActivity.this, ConfirmationActivity.class);
+
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
+        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, message);
+
+        startActivity(intent);
     }
 
 }

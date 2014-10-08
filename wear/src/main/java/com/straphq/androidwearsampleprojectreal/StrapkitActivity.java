@@ -6,6 +6,7 @@ package com.straphq.androidwearsampleprojectreal;
 public interface StrapkitActivity {
 
     public void updateView(StrapkitView v);
+    public void confirmActivity(String message);
 
 
 }

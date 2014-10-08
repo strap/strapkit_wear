@@ -32,35 +32,14 @@ public class StrapkitBridge implements DataApi.DataListener{
         mGoogleApiClient = apiClient;
         this.activity = activity;
         mGoogleApiClient.connect();
+        Wearable.DataApi.addListener(mGoogleApiClient, this);
 
         initializeView();
     }
 
     private void initializeView() {
-        PendingResult<DataItemBuffer> results = Wearable.DataApi.getDataItems(mGoogleApiClient);
-        results.setResultCallback(new ResultCallback<DataItemBuffer>() {
-            @Override
-            public void onResult(DataItemBuffer dataItems) {
-                for(DataItem item : dataItems) {
-                    DataMapItem dataMapItem = DataMapItem.fromDataItem(item);
-
-                    if(dataMapItem.getUri().getPathSegments().get(0).equals("views")) {
-
-                        StrapkitView v = new StrapkitView(dataMapItem.getDataMap());
-
-                        if(v.getType() == 2) {
-                            v = new StrapkitListView(dataMapItem.getDataMap());
-                        }
-
-                        activity.updateView(v);
-
-                    }
-
-                }
-
-                dataItems.release();
-            }
-        });
+        PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/strapkitInit");
+        dataMapRequest.getDataMap().putString("date", new Date().toString());
     }
 
     public void onTouch(String viewID) {
@@ -71,7 +50,7 @@ public class StrapkitBridge implements DataApi.DataListener{
         PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
                 .putDataItem(mGoogleApiClient, request);
 
-
+        return;
     }
 
     public void onDataChanged(DataEventBuffer buffer) {
