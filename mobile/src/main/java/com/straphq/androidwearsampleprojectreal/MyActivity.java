@@ -1,4 +1,4 @@
-package com.straphq.androidwearsampleprojectreal;
+package com.straphq.rewrite;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -62,6 +62,7 @@ public class MyActivity extends Activity {
                         });
 
                     }
+
                     @Override
                     public void onConnectionSuspended(int cause) {
                         Log.d("", "onConnectionSuspended: " + cause);
@@ -96,6 +97,6 @@ public class MyActivity extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }

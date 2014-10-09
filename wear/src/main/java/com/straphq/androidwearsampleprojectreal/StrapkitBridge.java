@@ -1,5 +1,8 @@
 package com.straphq.androidwearsampleprojectreal;
 
+import android.hardware.SensorManager;
+import android.content.Context;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -14,6 +17,8 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+
+
 import java.util.Date;
 
 /**
@@ -23,23 +28,35 @@ public class StrapkitBridge implements DataApi.DataListener{
 
     private GoogleApiClient mGoogleApiClient;
     private StrapkitActivity activity;
+    private SensorManager sensorManager;
+    private StrapkitSensorManager mStrapkitSensorManager;
+    private Context context;
 
     public StrapkitBridge() {
 
     }
 
-    public StrapkitBridge(GoogleApiClient apiClient, StrapkitActivity activity) {
+    public StrapkitBridge(GoogleApiClient apiClient, StrapkitActivity activity, Context context) {
         mGoogleApiClient = apiClient;
         this.activity = activity;
+        this.context = context;
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        mStrapkitSensorManager = new StrapkitSensorManager(sensorManager, apiClient);
         mGoogleApiClient.connect();
         Wearable.DataApi.addListener(mGoogleApiClient, this);
 
         initializeView();
+
     }
 
     private void initializeView() {
         PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/strapkitInit");
         dataMapRequest.getDataMap().putString("date", new Date().toString());
+
+        PutDataRequest request = dataMapRequest.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+                .putDataItem(mGoogleApiClient, request);
+        return;
     }
 
     public void onTouch(String viewID) {
@@ -67,6 +84,10 @@ public class StrapkitBridge implements DataApi.DataListener{
                 }
 
                 activity.updateView(v);
+            }
+
+            if(event.getDataItem().getUri().getPathSegments().get(0).equals("confirmActivity")) {
+                activity.confirmActivity(map.getString("message"));
             }
         }
     }

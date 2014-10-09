@@ -1,4 +1,4 @@
-package com.straphq.androidwearsampleprojectreal;
+package com.straphq.rewrite;
 
 import android.webkit.JavascriptInterface;
 import android.content.Context;

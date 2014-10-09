@@ -4,10 +4,16 @@ strapkit.init = function () {
   var times = 0;
   strapkit.strapmetrics.init("tSGpQgSgjYZisap2o");
 
-  var textvw = new textView("Hello, Strapkit!", null, 'strapkit_init', function() {
+  var textvw = new textView("Welcome to CookieClicker!!", null, 'strapkit_init', function() {
     times++;
     this.text = "You clicked it " +times + " times!";
 
+    if(times == 10) {
+        if(strapkit.wear) {
+            strapkit.wear.confirmActivity("Congrats, you win!");
+        }
+
+    }
     strapkit.setTextView(this);
     strapkit.strapmetrics.logEvent("/click", {times: times});
   });

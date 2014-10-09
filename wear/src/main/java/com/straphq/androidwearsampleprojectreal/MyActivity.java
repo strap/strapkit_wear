@@ -82,7 +82,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
                 .addApi(Wearable.API)
                 .build();
 
-        bridge = new StrapkitBridge(mGoogleApiClient, listener);
+        bridge = new StrapkitBridge(mGoogleApiClient, listener, getApplicationContext());
 
         strap = new Strap(mGoogleApiClient, getApplicationContext(), "");
 
@@ -110,6 +110,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
                 if(v.getType() == 2) {
                     StrapkitListView list = (StrapkitListView) v;
                     WearableListView listView = new WearableListView(getApplicationContext());
+                    //listView.set
                     listView.setGreedyTouchMode(true);
                     listView.setAdapter(new StrapkitListAdapter(getApplicationContext(),list));
 
@@ -134,6 +135,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
     //Shows success message
     public void confirmActivity(String message) {
         Intent intent = new Intent(MyActivity.this, ConfirmationActivity.class);
+
 
         intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
         intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, message);
