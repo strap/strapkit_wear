@@ -1,4 +1,4 @@
-package com.straphq.rewrite;
+package com.straphq.androidwearsampleprojectreal;
 
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;

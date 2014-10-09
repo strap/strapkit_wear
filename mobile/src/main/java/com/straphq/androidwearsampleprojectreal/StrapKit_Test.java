@@ -1,4 +1,4 @@
-package com.straphq.rewrite;
+package com.straphq.androidwearsampleprojectreal;
 /**
  * Created by jonahback on 9/30/14.
  */

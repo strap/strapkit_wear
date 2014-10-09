@@ -1,4 +1,4 @@
-package com.straphq.rewrite;
+package com.straphq.androidwearsampleprojectreal;
 
 import android.app.Activity;
 import android.os.Bundle;
