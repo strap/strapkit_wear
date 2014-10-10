@@ -77,7 +77,7 @@ public class StrapKit implements DataApi.DataListener {
             for(int i=0; i<listItems.length(); i++) {
                 try{
                     JSONObject data = listItems.getJSONObject(i);
-                    listStrings.add(data.getString("text"));
+                    listStrings.add(data.getString("title"));
                  } catch (JSONException e) {
 
                 }
@@ -136,6 +136,15 @@ public class StrapKit implements DataApi.DataListener {
         Log.d("Strapkit", msg);
     }
 
+    public void init() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl("javascript:strapkit.init()");
+            }
+        });
+    }
+
     //Wear methods
     public void onTouch(final String viewID) {
         handler.post(new Runnable() {
@@ -158,12 +167,7 @@ public class StrapKit implements DataApi.DataListener {
             }
 
             if(evt.getDataItem().getUri().getPathSegments().get(0).equals("strapkitInit")) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.loadUrl("javascript:strapkit.init()");
-                    }
-                });
+                init();
             }
 
             if(evt.getDataItem().getUri().getPathSegments().get(0).equals("onTouch")) {

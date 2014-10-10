@@ -14,6 +14,11 @@ var View = function(subView, id, onTouch) {
   this.subView = subView;
   this.onTouch = onTouch;
 
+  this.on = function(evtName, callback) {
+    if(evtName === 'touch') {
+        this.onTouch = callback;
+    }
+  }
 
 };
 
@@ -28,8 +33,15 @@ var listView = function(items, subView, id, onTouch) {
   var view  = new View(null, id, onTouch);
   view.items = items;
   view.type = ViewType.kViewTypeList;
+
   return view;
 };
+
+window.require = function(lib) {
+    if(lib === 'strapkit') {
+        return window.strapkit;
+    }
+}
 
 window.strapkit = {
 
@@ -52,14 +64,26 @@ window.strapkit = {
     }
   },
 
-  //hooks into strapmetrics
-  strapmetrics: {
-    init: function(appID) {
-      window.strapkit_bridge.strapMetricsInit(appID);
+  ui: {
+    menu: function(menuConfig) {
+        var view = new View(null, "menu_id", null);
+        view.items = menuConfig.sections[0].items;
+        view.type = ViewType.kViewTypeList;
+        view.show = function() {
+            window.strapkit.setListView(this);
+        }
+        return view;
+    }
+  },
 
+  //hooks into strapmetrics
+  metrics: {
+    init:function(obj) {
+        //Only use app id for now
+        window.strapkit_bridge.strapMetricsInit(obj.app_id);
     },
 
-    logEvent: function(evt, data) {
+    log: function(evt, data) {
       window.strapkit_bridge.strapMetricsLogEvent(evt, JSON.stringify(data));
     }
   },
