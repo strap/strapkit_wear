@@ -17,8 +17,12 @@ var View = function(subView, id, onTouch) {
   this.on = function(evtName, callback) {
     if(evtName === 'touch') {
         this.onTouch = callback;
+    } else if(evtName === 'select') {
+        this.onSelect = callback;
     }
   }
+
+  return this;
 
 };
 
@@ -73,6 +77,17 @@ window.strapkit = {
             window.strapkit.setListView(this);
         }
         return view;
+    },
+
+    view: function(viewConfig) {
+      var view = new View(null, "text_id", null);
+      view.type = ViewType.kViewTypeText;
+      view.title = viewConfig.title;
+
+      view.show = function() {
+            window.strapkit.setTextView(this);
+      };
+      return view;
     }
   },
 
@@ -92,7 +107,7 @@ window.strapkit = {
 
   setTextView: function(view) {
     this.views[view.id] = view;
-    window.strapkit_bridge.setTextView(view.text, view.id);
+    window.strapkit_bridge.setTextView(view.title, view.id);
   },
 
   setListView: function(view) {
@@ -104,6 +119,10 @@ window.strapkit = {
   onTouch: function(viewID, eventData) {
     console.error('onTouch received by Strapkit');
     this.views[viewID].onTouch(eventData);
+  },
+
+  onSelect: function(viewID, index) {
+    this.views[viewID].onSelect(index);
   }
 
 

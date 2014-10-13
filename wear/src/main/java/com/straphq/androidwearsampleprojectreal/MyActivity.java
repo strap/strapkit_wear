@@ -8,6 +8,7 @@ import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -84,7 +85,7 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
 
         bridge = new StrapkitBridge(mGoogleApiClient, listener, getApplicationContext());
 
-        strap = new Strap(mGoogleApiClient, getApplicationContext(), "");
+        //strap = new Strap(mGoogleApiClient, getApplicationContext(), "");
 
     }
 
@@ -92,36 +93,60 @@ public class MyActivity extends Activity implements View.OnTouchListener, Strapk
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                boolean isNewView = true;
+                ViewGroup viewGroup = (ViewGroup)getWindow().getDecorView();
                 LinearLayout layout = new LinearLayout(getApplicationContext());
                 if(v.getType() == 1) {
+                    TextView textView = null;
+                    if(viewGroup.findViewWithTag(v.getId()) != null) {
+                        textView = (TextView)  viewGroup.findViewWithTag(v.getId());
+                        textView.setText(v.getTitle());
+                        isNewView = false;
+                    } else {
 
-                    TextView textView = new TextView(getApplicationContext());
-                    textView.setText(v.getTitle());
-                    textView.setTag(v.getId());
-                    textView.setOnTouchListener(onTouchListener);
+                        textView = new TextView(getApplicationContext());
+                        textView.setText(v.getTitle());
+                        textView.setTag(v.getId());
+                        textView.setOnTouchListener(onTouchListener);
 
 
-                    textView.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.FILL_PARENT,
-                            LinearLayout.LayoutParams.FILL_PARENT));
-                    layout.addView(textView);
+                        textView.setLayoutParams(new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.FILL_PARENT,
+                                LinearLayout.LayoutParams.FILL_PARENT));
+                        layout.addView(textView);
+                    }
                 }
 
                 if(v.getType() == 2) {
+
                     StrapkitListView list = (StrapkitListView) v;
-                    WearableListView listView = new WearableListView(getApplicationContext());
-                    //listView.set
-                    listView.setGreedyTouchMode(true);
-                    listView.setAdapter(new StrapkitListAdapter(getApplicationContext(),list));
 
-                    listView.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.FILL_PARENT,
-                            LinearLayout.LayoutParams.FILL_PARENT));
 
-                    layout.addView(listView);
+
+                    WearableListView listvw = (WearableListView)viewGroup.findViewWithTag(list.getId());
+                    if(listvw != null) {
+                        StrapkitListAdapter adapter = (StrapkitListAdapter) listvw.getAdapter();
+                        adapter.setItems(list.getListItems());
+                        adapter.notifyDataSetChanged();
+                        isNewView = false;
+                    } else {
+
+
+                        WearableListView listView = new WearableListView(getApplicationContext());
+                        //listView.set
+                        listView.setGreedyTouchMode(true);
+                        listView.setAdapter(new StrapkitListAdapter(getApplicationContext(), list));
+                        listView.setTag(v.getId());
+                        listView.setLayoutParams(new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.FILL_PARENT,
+                                LinearLayout.LayoutParams.FILL_PARENT));
+                        listView.setClickListener(new StrapkitListListener(v.getId(), bridge));
+                        layout.addView(listView);
+                    }
 
                 }
-                setContentView(layout);
+                if(isNewView)
+                    setContentView(layout);
             }
         });
     }

@@ -18,6 +18,9 @@ public class StrapkitListAdapter extends WearableListView.Adapter {
     public StrapkitListAdapter() {
 
     }
+    public void setItems(ArrayList<String> items) {
+        this.items = items;
+    }
 
     public StrapkitListAdapter(Context context, StrapkitListView listView) {
         items = listView.getListItems();

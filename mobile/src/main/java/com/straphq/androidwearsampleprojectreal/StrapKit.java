@@ -154,6 +154,16 @@ public class StrapKit implements DataApi.DataListener {
             }
         });
     }
+
+    public void onSelect(final String viewID, final int position) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl("javascript:strapkit.onSelect('" + viewID + "'," + position + ")");
+            }
+        });
+    }
+
     @Override
     public void onDataChanged(DataEventBuffer buffer) {
         for(DataEvent evt : buffer) {
@@ -171,12 +181,18 @@ public class StrapKit implements DataApi.DataListener {
             }
 
             if(evt.getDataItem().getUri().getPathSegments().get(0).equals("onTouch")) {
-
                 DataItem item = evt.getDataItem();
                 DataMap map = DataMapItem.fromDataItem(item).getDataMap();
                 final String viewID = map.getString("id");
                 onTouch(viewID);
+            }
 
+            if(evt.getDataItem().getUri().getPathSegments().get(0).equals("onSelect")) {
+                DataItem item = evt.getDataItem();
+                DataMap map = DataMapItem.fromDataItem(item).getDataMap();
+                final String viewID = map.getString("id");
+                final int position = map.getInt("position");
+                onSelect(viewID, position);
             }
 
 

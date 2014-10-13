@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * Created by jonahback on 9/29/14.
  */
-public class StrapkitBridge implements DataApi.DataListener{
+public class StrapkitBridge implements DataApi.DataListener {
 
     private GoogleApiClient mGoogleApiClient;
     private StrapkitActivity activity;
@@ -69,6 +69,21 @@ public class StrapkitBridge implements DataApi.DataListener{
 
         return;
     }
+
+    public void onSelect(String viewID, int position) {
+
+        PutDataMapRequest dataMap = PutDataMapRequest.create("/onSelect");
+        dataMap.getDataMap().putString("id", viewID);
+        dataMap.getDataMap().putInt("position", position);
+        dataMap.getDataMap().putString("date", new Date().toString());
+        PutDataRequest request = dataMap.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+                .putDataItem(mGoogleApiClient, request);
+
+        return;
+    }
+
+
 
     public void onDataChanged(DataEventBuffer buffer) {
         for (DataEvent event : buffer) {
