@@ -11,6 +11,7 @@ public class StrapKitCrashReporter extends WebChromeClient{
     @Override
     public boolean onConsoleMessage(ConsoleMessage message) {
         message.message();
+
         return true;
     }
 

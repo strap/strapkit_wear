@@ -49,6 +49,10 @@ window.require = function(lib) {
 
 window.strapkit = {
 
+  platform: {
+
+  },
+
   //wear specific code
   wear: {
     confirmActivity: function(message) {
@@ -71,7 +75,8 @@ window.strapkit = {
   ui: {
     menu: function(menuConfig) {
         var view = new View(null, "menu_id", null);
-        view.items = menuConfig.sections[0].items;
+        view.sections = menuConfig.sections;
+        //view.items = menuConfig.sections[0].items;
         view.type = ViewType.kViewTypeList;
         view.show = function() {
             window.strapkit.setListView(this);
@@ -112,7 +117,7 @@ window.strapkit = {
 
   setListView: function(view) {
     this.views[view.id] = view;
-    var arrayTxt = JSON.stringify(view.items);
+    var arrayTxt = JSON.stringify(view.sections[0].items);
     window.strapkit_bridge.setListView(view.text, view.id, arrayTxt);
   },
 
