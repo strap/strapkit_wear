@@ -2,9 +2,10 @@
 
 CURRENT_DIR=$(cd "$( dirname "$0" )" && pwd -P)
 
+PROJECT_NAME=$( basename $( pwd -P ) )
 FILE_NAME="$1"
 echo $CURRENT_DIR
-SAMPLE_DIR=$CURRENT_DIR"/../SampleProject"
+SAMPLE_DIR=$CURRENT_DIR"/../$PROJECT_NAME"
 OUTPUT_DIR=$CURRENT_DIR"/../../../output/"
 APP_FILE="$0"
 if [ "$1" == "" ];then
