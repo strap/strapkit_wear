@@ -1,4 +1,4 @@
-package com.straphq.androidwearsampleprojectreal;
+package com.straphq.strapkit;
 
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;

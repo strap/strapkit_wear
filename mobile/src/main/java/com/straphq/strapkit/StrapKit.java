@@ -1,4 +1,4 @@
-package com.straphq.androidwearsampleprojectreal;
+package com.straphq.strapkit;
 
 import android.webkit.JavascriptInterface;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.webkit.WebView;
 import android.util.Log;
 import android.os.Handler;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.*;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
@@ -15,20 +16,32 @@ import com.google.android.gms.common.api.PendingResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.Date;
 import java.util.ArrayList;
 
+import com.straphq.strapkit_lib.sensor.StrapkitSensorData;
+import com.straphq.strapkit_lib.ui.StrapkitListView;
+import com.straphq.strapkit_lib.ui.StrapkitView;
 import com.straphq.wear_sdk.StrapMetrics;
 
 /**
  * Created by jonahback on 9/19/14.
  */
-public class StrapKit implements DataApi.DataListener {
+public class StrapKit implements DataApi.DataListener, MessageApi.MessageListener {
     Context mContext;
     GoogleApiClient mGoogleApiClient;
     WebView mWebView;
     private Handler handler = new Handler();
     private StrapMetrics metrics;
+    private Node mNode;
 
     boolean metricsEnabled = false;
 
@@ -39,6 +52,14 @@ public class StrapKit implements DataApi.DataListener {
         this.mGoogleApiClient = mGoogleApiClient;
         metrics = new StrapMetrics();
 
+        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback( new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+            @Override
+            public void onResult(NodeApi.GetConnectedNodesResult result) {
+                for (Node n : result.getNodes()) {
+                    mNode = n;
+                }
+            }
+        });
     }
 
   //JS Interface methods
@@ -84,39 +105,43 @@ public class StrapKit implements DataApi.DataListener {
                 }
             }
 
-            PutDataMapRequest dataMap = PutDataMapRequest.create("/views/" + viewID);
-            dataMap.getDataMap().putString("id", viewID);
-            dataMap.getDataMap().putString("date", new Date().toString());
-            dataMap.getDataMap().putStringArrayList("listItems", listStrings);
-            dataMap.getDataMap().putInt("type", 2);
+            StrapkitListView listView = new StrapkitListView(viewID);
+            listView.setType(2);
+            listView.setListItems(listStrings);
 
-            PutDataRequest request = dataMap.asPutDataRequest();
-            PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
-                    .putDataItem(mGoogleApiClient, request);
+            serializeAndSend(listView, "view");
         }
     }
 
     @JavascriptInterface
     public void setTextView(String viewText, String viewID) {
         try {
-             JSONObject viewJSON = new JSONObject();
-            System.out.print(viewID);
+            JSONObject viewJSON = new JSONObject();
 
-            PutDataMapRequest dataMap = PutDataMapRequest.create("/views/" + viewID);
-            dataMap.getDataMap().putString("id", viewID);
-            dataMap.getDataMap().putString("title", viewText);
-            dataMap.getDataMap().putString("date", new Date().toString());
-            dataMap.getDataMap().putInt("type", 1);
+            StrapkitView view = new StrapkitView(viewID);
+            view.setType(1);
+            view.setTitle(viewText);
+            view.setChild(null);
 
-
-            PutDataRequest request = dataMap.asPutDataRequest();
-            PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
-                    .putDataItem(mGoogleApiClient, request);
+            serializeAndSend(view, "view");
         } catch (Exception e) {
 
         }
 
+    }
 
+    private void serializeAndSend(Object rawObjectToSend, String path) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream out = null;
+        byte[]  binaryData = null;
+        try {
+            out = new ObjectOutputStream(byteArrayOutputStream);
+            out.writeObject(rawObjectToSend);
+            binaryData = byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+
+        }
+        Wearable.MessageApi.sendMessage(mGoogleApiClient,mNode.getId(),path,  binaryData);
     }
 
     //Sensor methods
@@ -142,7 +167,7 @@ public class StrapKit implements DataApi.DataListener {
             @Override
             public void run() {
 
-                String html = "<html><script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js\"></script><script src=\"file:///android_asset/strapkit.js\"></script><script src=\"file:///android_asset/app.js\"></script><body></body></html>";
+                String html = "<html><script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js\"></script><script src=\"file:///android_asset/ajax.js\"></script><script src=\"file:///android_asset/strapkit.js\"></script><script src=\"file:///android_asset/app.js\"></script><body></body></html>";
                 mWebView.loadDataWithBaseURL("file:////android_asset/", html, "text/html", "utf-8", "");
                 //mWebView.loadUrl("javascript:strapkit.init()");
             }
@@ -166,6 +191,19 @@ public class StrapKit implements DataApi.DataListener {
                 mWebView.loadUrl("javascript:strapkit.onSelect('" + viewID + "'," + position + ")");
             }
         });
+    }
+
+    public void injectSensorData(final StrapkitSensorData data) {
+        final String x = data.asJson().toString();
+        if(mGoogleApiClient.isConnected()) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String y = "javascript:strapkit.handleSensor(" + data.asJson().toString() + ")";
+                    mWebView.loadUrl(y);
+                }
+            });
+        }
     }
 
     @Override
@@ -201,5 +239,25 @@ public class StrapKit implements DataApi.DataListener {
             }
         }
         buffer.release();
+    }
+
+
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        if(messageEvent.getPath().equals("sensor")) {
+            StrapkitSensorData data = null;
+            try {
+                InputStream inputStream = new ByteArrayInputStream(messageEvent.getData());
+                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                data = (StrapkitSensorData) objectInputStream.readObject();
+                injectSensorData(data);
+
+            } catch (IOException e) {
+
+            } catch (ClassNotFoundException e) {
+
+            }
+
+        }
     }
 }

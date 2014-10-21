@@ -1,4 +1,4 @@
-package com.straphq.androidwearsampleprojectreal;
+package com.straphq.strapkit;
 /**
  * Created by jonahback on 9/30/14.
  */

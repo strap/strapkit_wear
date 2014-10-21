@@ -1,4 +1,4 @@
-package com.straphq.androidwearsampleprojectreal;
+package com.straphq.strapkit;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,15 +10,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.*;
-import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.common.api.Status;
+
 import android.util.Log;
 import android.webkit.WebView;
-
-import com.straphq.wear_sdk.StrapMetrics;
 
 public class MyActivity extends Activity {
 
@@ -42,6 +37,7 @@ public class MyActivity extends Activity {
                             public void run() {
                                 strapKit = new StrapKit(getApplicationContext(), mGoogleApiClient);
                                 Wearable.DataApi.addListener(mGoogleApiClient, strapKit);
+                                Wearable.MessageApi.addListener(mGoogleApiClient, strapKit);
 
 
                                 WebView jsEnv = new WebView(getApplicationContext());
@@ -52,7 +48,7 @@ public class MyActivity extends Activity {
                                 jsEnv.setWebChromeClient(new StrapKitCrashReporter());
                                 strapKit.mWebView = jsEnv;
                                 StrapKit_Test tester = new StrapKit_Test(strapKit);
-
+                                strapKit.init();
                                 //strapKit.init();
                                 //tester.listView();
                             }

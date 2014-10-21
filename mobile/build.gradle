@@ -8,13 +8,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 20
+    compileSdkVersion 19
     buildToolsVersion "20.0.0"
-
     defaultConfig {
         applicationId "com.straphq.androidwearsampleprojectreal"
-        minSdkVersion 18
-        targetSdkVersion 20
+        minSdkVersion 19
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }
@@ -24,11 +23,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
     compile 'com.google.android.gms:play-services-wearable:+'
-    compile(name:'mobile', ext:'aar')
+    compile(name: 'mobile', ext: 'aar')
+    compile project(':strapkit_lib')
 }

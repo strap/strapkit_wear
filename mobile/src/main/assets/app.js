@@ -9,7 +9,24 @@ SM.init({
 app_id:"tSGpQgSgjYZisap2o"
 });
 
+var cityName = 'London';
+var URL = 'http://api.openweathermap.org/data/2.5/weather?q=' + cityName;
+
 SM.log('/main/show', {data: "good"});
+ajax(
+  {
+    url: URL,
+    type: 'json'
+  },
+  function(data) {
+    // Success!
+    console.log('Successfully fetched weather data!');
+  },
+  function(error) {
+    // Failure!
+    console.log('Failed fetching weather data: ' + error);
+  }
+);
 
 $.getJSON('http://opticontact.herokuapp.com/lenses', function(data) {
 console.log(data)

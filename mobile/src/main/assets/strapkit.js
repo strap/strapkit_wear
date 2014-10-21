@@ -45,6 +45,9 @@ window.require = function(lib) {
     if(lib === 'strapkit') {
         return window.strapkit;
     }
+    if(lib === 'ajax') {
+        return window.ajax;
+    }
 }
 
 window.strapkit = {
@@ -60,10 +63,15 @@ window.strapkit = {
     }
   },
 
+  onSensor: function(obj) {
+    var sensorData = JSON.parse(obj);
+    console.log(sensorData);
+  },
   //sensors
 
   sensor : {
     accelerometer: {
+
 
     },
 
