@@ -1,0 +1,3 @@
+var View = function(config) {
+	
+};

@@ -1,0 +1,3 @@
+var Page = function(config) {
+	
+};
