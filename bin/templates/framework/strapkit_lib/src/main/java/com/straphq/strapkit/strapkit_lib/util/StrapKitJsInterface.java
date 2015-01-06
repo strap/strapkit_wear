@@ -20,8 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by martinza on 12/31/14.
@@ -50,54 +53,20 @@ public class StrapKitJsInterface {
         init();
     }
 
-    private String getJavascript() {
-        String out = "";
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new InputStreamReader(mContext.getAssets().open("app.min.js")));
-            String str;
-            while ((str = in.readLine()) != null) {
-                out += str;
-            }
-        } catch (IOException e) {
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return out;
-    }
-
     //JS Interface methods
 
 
-    //StrapMetrics methods
     @JavascriptInterface
-    public void strapMetricsInit(String appID) {
-        Log.d(TAG, "strapMetricsInit: " + appID);
+    public void showPage(String json) {
+        try {
+            JSONObject object = new JSONObject(json);
+            JSONArray array = object.getJSONArray("views");
+            Log.d(TAG, "show Page: " + json);
+        } catch (Exception e) {
+            Log.d(TAG, "failed to parse", e);
+
+        }
     }
-
-    @JavascriptInterface
-    public void strapMetricsLogEvent(String event, String cvar) {
-        Log.d(TAG, "strapMetricsLogEvent: " + event);
-    }
-
-    @JavascriptInterface
-    public void setListView(String title, String viewID, String listJSON) {
-        Log.d(TAG, "setListView");
-
-    }
-
-    @JavascriptInterface
-    public void setTextView(String viewText) {
-        Log.d(TAG, "setTextView");
-
-    }
-
     //Sensor methods
 
     //Android-specific methods
@@ -114,8 +83,7 @@ public class StrapKitJsInterface {
         handler.post(new Runnable() {
             @Override
             public void run() {
-
-                String html = "<html><script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js\"></script><script src=\"file:///android_asset/require.js\"></script><script src=\"file:///android_asset/ajax.js\"></script><script src=\"file:///android_asset/strapkit.js\"></script><script src=\"file:///android_asset/app.js\"></script><body></body></html>";
+                String html = "<html><script type=\"text/javascript\" src=\"file:///android_asset/js/app.min.js\"></script><body></body></html>";
                 mWebView.loadDataWithBaseURL("file:////android_asset/", html, "text/html", "utf-8", "");
                 //mWebView.loadUrl("javascript:strapkit.init()");
             }

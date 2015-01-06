@@ -50,7 +50,7 @@ public class MyActivity extends Activity {
                                 StrapKit_Test tester = new StrapKit_Test(strapKit);
 
                                 strapKit.init();
-                                //tester.listView();
+                                tester.listView();
                             }
                         });
 
