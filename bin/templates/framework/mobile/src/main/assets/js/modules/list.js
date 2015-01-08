@@ -1,5 +1,3 @@
-var klass = require('klass');
-var View = require('./view.js');
 
 /*
   item: {
@@ -38,5 +36,3 @@ var ListView = View.extend({
     };
   }
 })
-
-module.exports = ListView;

@@ -1,5 +1,3 @@
-var klass = require('klass');
-
 
 var Page = klass({
 	views: [],
@@ -15,8 +13,8 @@ var Page = klass({
 		}
 	},
 	addView: function(view) {
-		console.log(view);
 		this.views.push(view);
+		console.log("View count: " + this.views.length);
 	},
 	getViews: function() {
 		return this.views;
@@ -27,6 +25,4 @@ var Page = klass({
 	hide: function() {
 		this.pageOpen = false;
 	}
-})
-
-module.exports = Page;
+});

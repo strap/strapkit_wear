@@ -1,10 +1,4 @@
-var ListView = require('./modules/list.js');
-var Page = require('./modules/page.js');
-var View = require('./modules/view.js');
-var Card = require('./modules/card.js');
-var TextView = require('./modules/text.js');
-var klass = require('klass');
-var util = require('util');
+
 
 var stringify = function(obj) {
 	var cache = [];
@@ -26,41 +20,52 @@ var stringify = function(obj) {
 	  cache = null;
 	  return json;
 };
-
 var AndroidPage = Page.extend({
+	id: -1,
+	setId: function(idx) {
+		if (this.id == null) {
+			this.id = idx;
+		}
+	},
+	getId: function() {
+		return this.id;
+	},
 	show: function() {
-		console.log('show');
-		console.log(this);
 		this.pageOpen = true;
-		viewString = [];
+		var viewString = [];
 		for (var i = 0; i < this.getViews().length; i++) {
 			var view = this.getViews()[i];
 			viewString.push(view.getJSON());
 		}
-		var output = {
+		var json = {
 			views: viewString,
 			pageOpen: this.pageOpen
-		};
-		window.strapkit_bridge.showPage(stringify(output));
+		};	
+		window.strapkit_bridge.showPage(stringify(json));
 	},
 	hide: function() {
 		console.log('hide');
 		this.pageOpen = false;
 		window.strapkit_bridge.hidePage(this);
 	}
-})
+});
 
-
-
-var userInterface = {
-    ListView : function(config){ return ListView(config)},
-    Card : function(config){ return new Card(config); },
-    TextView : function(config) { return new TextView(config); },
-    Page : function(config) { return new AndroidPage(config)}
-}
-
-
-
-module.exports = {
-    'UI' : userInterface
+var httpClient = function(opts, success, error) {
+	if (success != null) {
+		success = success.toString();
+	}
+	if (error != null) {
+		error = error.toString();
+	}
+	window.strapkit_bridge.httpClient(opts, success, error);
 };
+
+
+var StrapKit = {
+	UI: {
+	    ListView : function(config){ return ListView(config); },
+	    Card : function(config){ return new Card(config); },
+	    TextView : function(config) { return new TextView(config); },
+	    Page : function(config) { return new AndroidPage(config); }
+	}
+}

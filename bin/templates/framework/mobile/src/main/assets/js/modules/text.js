@@ -1,5 +1,3 @@
-var klass = require('klass');
-var View = require('./view.js');
 
 var TextView = View.extend({
 	position: 'left',
@@ -13,9 +11,8 @@ var TextView = View.extend({
 		return {
 			position: this.position,
 			text: this.text,
-			type: 'text'
+			type: 'text',
+			id: this.id
 		};
 	}
-}) 
-
-module.exports = TextView;
+});

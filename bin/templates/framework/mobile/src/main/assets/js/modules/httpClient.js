@@ -17,4 +17,5 @@ var httpClient = function(opt, success, failure) {
 	//opt.data: { 'username': 'myUsername'}
 	//opt.heaaders: { 'Authorization': 'Token: 0sdknweeksokdf0'}
 	//opt.async: true or false
+
 };

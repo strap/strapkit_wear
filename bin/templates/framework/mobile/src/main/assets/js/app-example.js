@@ -1,5 +1,4 @@
-var StrapKit = require('./strapkit.js');
- 
+
 var parseFeed = function(data, quantity) {
   var items = [];
   for(var i = 0; i < quantity; i++) {
@@ -34,7 +33,7 @@ var card = StrapKit.UI.Card({
 var cardClick = function() {
   var newPage = StrapKit.UI.Page();
 
-  var text = StrapKit.UI.Text({
+  var text = StrapKit.UI.TextView({
     position: 'center',
     text: 'My first transition'
   });
@@ -48,9 +47,9 @@ card.setOnClick(cardClick);
 // Add to splashPage and show
 splashPage.addView(card);
 splashPage.show();
- 
+
 // Make request to openweathermap.org
-/* StrapKit.HttpClient(
+StrapKit.HttpClient(
   {
     url:'http://api.openweathermap.org/data/2.5/forecast?q=London',
     type:'json'
@@ -61,8 +60,16 @@ splashPage.show();
     
     var resultsPage = StrapKit.UI.Page();
 
+    var resultText = StrapKit.UI.TextView({
+        position: 'left',
+        text: JSON.stringify(menuItems);
+    });
+
+    resultsPage.addView(resultText);
+    resultsPage.show();
+
     // Construct Menu to show to user
-    var resultsMenu = StrapKit.UI.ListView({
+    /*var resultsMenu = StrapKit.UI.ListView({
         items: menuItems
     });
  
@@ -94,10 +101,10 @@ splashPage.show();
     // Show the Menu, hide the splash
     resultsPage.addView(resultsMenu);
     resultsPage.show();
-    splashWindow.hide();
+    splashWindow.hide();*/
 
   },
   function(error) {
     console.log("Download failed: " + error);
   }
-);*/
+);
