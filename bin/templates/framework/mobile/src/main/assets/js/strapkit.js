@@ -57,8 +57,13 @@ var httpClient = function(opts, success, error) {
 	if (error != null) {
 		error = error.toString();
 	}
-	window.strapkit_bridge.httpClient(opts, success, error);
+	window.strapkit_bridge.httpClient(stringify(opts), success, error);
 };
+
+var convertJavaObject = function(data) {
+	data = JSON.parse(window.strapkit_bridge.getJavaJSONObject(data));
+	return data;
+}
 
 
 var StrapKit = {
@@ -67,5 +72,6 @@ var StrapKit = {
 	    Card : function(config){ return new Card(config); },
 	    TextView : function(config) { return new TextView(config); },
 	    Page : function(config) { return new AndroidPage(config); }
-	}
+	},
+	HttpClient: httpClient
 }

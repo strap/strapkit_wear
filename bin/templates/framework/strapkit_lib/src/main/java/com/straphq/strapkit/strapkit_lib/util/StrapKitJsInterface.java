@@ -98,6 +98,26 @@ public class StrapKitJsInterface {
         httpClient.setSuccess(success);
         httpClient.setFailure(failure);
 
+        httpClient.processHTTPCall(new HttpClient.HttpClientCallback() {
+            @Override
+            public void OnHttpComplete(String callback, String info) {
+                evaluateJs(callback, info);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public JSONObject getJavaJSONObject(String data) {
+
+        try {
+            JSONObject object = new JSONObject(data);
+
+            return object;
+        } catch (Exception e) {
+            Log.d(TAG, "Failed", e);
+            return null;
+        }
+
     }
 
     public void log(String msg) {
@@ -116,11 +136,37 @@ public class StrapKitJsInterface {
     }
 
     public void evaluateJs(final String javascript) {
+        evaluateJs(javascript, null);
+    }
+
+    public void evaluateJs(final String javascript, final String info) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "javascript: " + javascript);
-                mWebView.loadUrl("javascript:var myMethod = " + javascript + "; myMethod();");
+                try {
+                    String javascriptNoComments = javascript.replaceAll("(\\/\\*[\\w\\'\\s\\r\\n\\*]*\\*\\/)|(\\/\\/[\\w\\s\\']*)|(\\<![\\-\\-\\s\\w\\>\\/]*\\>)", "");
+                    String javascriptFunction = "javascript:var myMethod = " + javascriptNoComments + ";";
+                    if (info != null) {
+                        try {
+                            JSONObject object = new JSONObject(info);
+                            javascriptFunction = "javascript: var data = JSON.parse('" + object.toString() + "'); \n(" + javascriptNoComments + ")(data);";
+                        } catch (Exception o) {
+                            Log.d(TAG, "not an object");
+                            try {
+                                JSONArray array = new JSONArray(info);
+                                javascriptFunction = "javascript: var data = JSON.parse('" + array.toString() + "'); \n(" + javascriptNoComments + ")(data);";
+                            } catch (Exception a) {
+                                Log.d(TAG, "not array");
+                                javascriptFunction = "javascript:(" + javascriptNoComments + ")(" + info + ");";
+                            }
+                        }
+                    } else {
+                        javascriptFunction = javascriptFunction + " \n myMethod();";
+                    }
+                    mWebView.loadUrl(javascriptFunction);
+                } catch (Exception e) {
+                    Log.d(TAG, "exception", e);
+                }
             }
         });
     }

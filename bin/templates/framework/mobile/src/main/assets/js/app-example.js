@@ -30,6 +30,10 @@ var card = StrapKit.UI.Card({
   body:'My first StrapKit App'
 });
 
+var type = '{"hello":"hi"}';
+
+console.log(JSON.parse(type));
+
 var cardClick = function() {
   var newPage = StrapKit.UI.Page();
 
@@ -55,16 +59,14 @@ StrapKit.HttpClient(
     type:'json'
   },
   function(data) {
-    // Create an array of Menu items
+    console.log(data);
+
     var menuItems = parseFeed(data, 10);
-    
     var resultsPage = StrapKit.UI.Page();
-
     var resultText = StrapKit.UI.TextView({
-        position: 'left',
-        text: JSON.stringify(menuItems);
+      position: 'left',
+      text: JSON.stringify(menuItems)
     });
-
     resultsPage.addView(resultText);
     resultsPage.show();
 
@@ -105,6 +107,6 @@ StrapKit.HttpClient(
 
   },
   function(error) {
-    console.log("Download failed: " + error);
+    console.log(error);
   }
 );
