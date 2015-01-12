@@ -48,6 +48,7 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "Setting has time passed");
                 mTimeHasPassed = true;
                 closeSplashActivity();
             }
@@ -77,6 +78,7 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Setting ready to close");
             mIsReadyToClose = true;
             closeSplashActivity();
         }
@@ -84,6 +86,8 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
 
     private void closeSplashActivity() {
         if (mIsReadyToClose && mTimeHasPassed) {
+            Log.d(TAG, "Close splash Activity");
+            ((StrapKitApplication) getApplication()).finishedSplashPage();
             finish();
         }
     }

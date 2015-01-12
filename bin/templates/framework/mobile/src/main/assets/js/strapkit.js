@@ -68,10 +68,18 @@ var convertJavaObject = function(data) {
 
 var StrapKit = {
 	UI: {
-	    ListView : function(config){ return ListView(config); },
+	    ListView : function(config){ return new ListView(config); },
 	    Card : function(config){ return new Card(config); },
 	    TextView : function(config) { return new TextView(config); },
 	    Page : function(config) { return new AndroidPage(config); }
 	},
-	HttpClient: httpClient
+	HttpClient: httpClient,
+	Metrics: {
+		init: function(app_id) {
+			window.strapkit_bridge.initMetrics(app_id);
+		},
+		logEvent: function(event_path, event_data) {
+			window.strapkit_bridge.logEvent(event_path, event_data);
+		}
+	}
 }

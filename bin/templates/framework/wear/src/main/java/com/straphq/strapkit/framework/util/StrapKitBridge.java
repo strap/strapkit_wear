@@ -6,13 +6,16 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.straphq.strapkit.framework.StrapKitApplication;
 import com.straphq.strapkit.framework.StrapKitBaseActivity;
 import com.straphq.strapkit.framework.view.StrapKitBaseView;
 import com.straphq.strapkit.framework.view.StrapKitCardFragment;
+import com.straphq.strapkit.framework.view.StrapKitListView;
 import com.straphq.strapkit.framework.view.StrapKitTextView;
 import com.straphq.strapkit.strapkit_lib.util.StrapKitConstants;
 
@@ -57,13 +60,19 @@ public class StrapKitBridge {
                 case "card":
                     Log.d(TAG, "element: " + element.toString());
                     StrapKitCardFragment cardFragment = gson.fromJson(object, StrapKitCardFragment.class);
-                    Log.d(TAG, cardFragment.onClick);
                     activityViews.add(cardFragment);
                     break;
                 case "text":
                     Log.d(TAG, "element: " + element.toString());
                     StrapKitTextView textView = gson.fromJson(object, StrapKitTextView.class);
                     activityViews.add(textView);
+                    break;
+                case "listView":
+                    Log.d(TAG, "element: " + element.toString());
+                    gson = new GsonBuilder()
+                            .registerTypeAdapter(StrapKitListView.WearableItem.class, new StrapKitListView.Desirializer()).create();
+                    StrapKitListView listView = gson.fromJson(object, StrapKitListView.class);
+                    activityViews.add(listView);
                     break;
                 default:
                     Log.d(TAG, "Object not supported: " + object.get("type").getAsString());
@@ -74,6 +83,6 @@ public class StrapKitBridge {
         Intent intent = new Intent(context, StrapKitBaseActivity.class);
         intent.putExtra(StrapKitBaseActivity.ARGS_VIEW_DEFINITIONS, activityViews);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        ((StrapKitApplication) context.getApplicationContext()).launchNewActivity(intent);
     }
 }

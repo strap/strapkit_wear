@@ -38,13 +38,15 @@ public class StrapKitCardFragment extends StrapKitBaseView {
             fragmentTransaction.replace(R.id.frame_layout, mCardFragment);
             fragmentTransaction.commit();
 
-            View view = activity.findViewById(R.id.frame_layout);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickFunction(activity, onClick);
-                }
-            });
+            if (onClick != null) {
+                View view = activity.findViewById(R.id.frame_layout);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onClickFunction(activity, onClick);
+                    }
+                });
+            }
         }
     }
 }

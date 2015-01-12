@@ -11,10 +11,14 @@ var Card = View.extend({
 		this.onCallback = event;
 	},
 	getJSON: function(){
+		var callbackString = null;
+		if (this.onCallback != null) {
+			callbackString = this.onCallback.toString();
+		}
 		return {
 			type: 'card',
 			id: this.id,
-			onClick: this.onCallback.toString() || null,
+			onClick: callbackString,
 			title: this.title,
 			body: this.body
 		};

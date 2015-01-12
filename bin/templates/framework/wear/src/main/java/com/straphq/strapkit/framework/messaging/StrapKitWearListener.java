@@ -65,7 +65,7 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
     public void onMessageReceived(MessageEvent messageEvent) {
 
         StrapKitBridge.handleMessage(this, messageEvent.getPath(), new String(messageEvent.getData()));
-        if (messageEvent.getPath().equals(StrapKitConstants.ACTION_START_UI)) {
+        if (messageEvent.getPath().equals(StrapKitConstants.ACTION_START_UI) || messageEvent.getPath().equals(StrapKitConstants.ACTION_SHOW_PAGE)) {
             Intent intent = new Intent();
             intent.setAction(StrapKitSplashActivity.READY_TO_CLOSE_FILTER);
             sendBroadcast(intent);

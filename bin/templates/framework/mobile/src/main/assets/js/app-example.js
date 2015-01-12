@@ -6,6 +6,11 @@ var parseFeed = function(data, quantity) {
     var title = data.list[i].weather[0].main;
     title = title.charAt(0).toUpperCase() + title.substring(1);
  
+
+    var date = new Date(data.list[i].dt_txt);
+
+    var displayDate = (date.getMonth() + 1) + '/' +date.getDate()+ '/' +date.getFullYear()+ ' ' +formatDateTime(date);
+
     // Get date/time substring
     var time = data.list[i].dt_txt;
     time = time.substring(time.indexOf('-') + 1, time.indexOf(':') + 3);
@@ -13,40 +18,38 @@ var parseFeed = function(data, quantity) {
     // Add to menu items array
     items.push({
       title:title,
-      subtitle:time
+      subtitle:displayDate,
+      data: data.list[i]
     });
   }
  
   // Finally return whole array
   return items;
 };
- 
+
+var formatDateTime = function(date) { // This is to display 12 hour format like you asked
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+};
+
+var app_id = "njgrse2JSpYBpFCSa";
+
+StrapKit.Metrics.init(app_id);
+
 // Show splash screen while waiting for data
 var splashPage = StrapKit.UI.Page();
  
 // Text element to inform user
 var card = StrapKit.UI.Card({
-  title: 'Hello World!',
-  body:'My first StrapKit App'
+  title: 'Weather App',
+  body:'Loading data now...'
 });
-
-var type = '{"hello":"hi"}';
-
-console.log(JSON.parse(type));
-
-var cardClick = function() {
-  var newPage = StrapKit.UI.Page();
-
-  var text = StrapKit.UI.TextView({
-    position: 'center',
-    text: 'My first transition'
-  });
-
-  newPage.addView(text);
-  newPage.show();
-};
-
-card.setOnClick(cardClick);
  
 // Add to splashPage and show
 splashPage.addView(card);
@@ -59,51 +62,46 @@ StrapKit.HttpClient(
     type:'json'
   },
   function(data) {
-    console.log(data);
 
     var menuItems = parseFeed(data, 10);
-    var resultsPage = StrapKit.UI.Page();
-    var resultText = StrapKit.UI.TextView({
-      position: 'left',
-      text: JSON.stringify(menuItems)
-    });
-    resultsPage.addView(resultText);
-    resultsPage.show();
 
+    var resultsPage = StrapKit.UI.Page();
     // Construct Menu to show to user
-    /*var resultsMenu = StrapKit.UI.ListView({
-        items: menuItems
+    var resultsMenu = StrapKit.UI.ListView({
+        items: menuItems,
+        data: data.list
     });
- 
+
     // Add an action for SELECT
-    resultsMenu.onItemClick(function(e) {
+    resultsMenu.setOnItemClick(function(e) {
           // Get that forecast
-          var forecast = data.list[e.itemIndex];
-         
-          // Assemble body string
-          var content = data.list[e.itemIndex].weather[0].description;
-         
-          // Capitalize first letter
-          content = content.charAt(0).toUpperCase() + content.substring(1);
-         
-          // Add temperature, pressure etc
-          content += '\nTemperature: ' + Math.round(forecast.main.temp - 273.15) + '°C' 
-          + '\nPressure: ' + Math.round(forecast.main.pressure) + ' mbar' +
-            '\nWind: ' + Math.round(forecast.wind.speed) + ' mph, ' + 
-            Math.round(forecast.wind.deg) + '°';
-         
-              // Create the Card for detailed view
-              var detailCard = StrapKit.UI.Card({
-                title:e.item.subtitle,
-                body: content
-              });
-              detailCard.show();
-      });
+        var forecast = e.item.data;
+        date
+        // Assemble body string
+        var content = forecast.weather[0].description;
+       
+        // Capitalize first letter
+        content = content.charAt(0).toUpperCase() + content.substring(1);
+       
+        // Add temperature, pressure etc
+        content += '\nTemperature: ' + Math.round(forecast.main.temp - 273.15) + '°C' 
+        + '\nPressure: ' + Math.round(forecast.main.pressure) + ' mbar' +
+          '\nWind: ' + Math.round(forecast.wind.speed) + ' mph, ' + 
+          Math.round(forecast.wind.deg) + '°';
+       
+        var detailPage = StrapKit.UI.Page();
+        // Create the Card for detailed view
+        var detailCard = StrapKit.UI.Card({
+          title:e.item.subtitle,
+          body: content
+        });
+        detailPage.addView(detailCard);
+        detailPage.show();
+    });
  
     // Show the Menu, hide the splash
     resultsPage.addView(resultsMenu);
     resultsPage.show();
-    splashWindow.hide();*/
 
   },
   function(error) {

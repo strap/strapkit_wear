@@ -21,6 +21,8 @@ import com.google.android.gms.wearable.Wearable;
 import com.straphq.strapkit.strapkit_lib.util.StrapKitConstants;
 import com.straphq.strapkit.strapkit_lib.util.StrapKitJsInterface;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class StrapKitMessageService extends Service implements DataApi.DataListener, MessageApi.MessageListener,
@@ -147,6 +149,14 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
             initializeJs();
         } else if (messageEvent.getPath().equals("/onClick")) {
             mJsInterface.evaluateJs(new String(messageEvent.getData()));
+        } else if (messageEvent.getPath().equals("/onItemClick")) {
+            Log.d(TAG, "message: " + new String(messageEvent.getData()));
+            try {
+                JSONObject object = new JSONObject(new String(messageEvent.getData()));
+                mJsInterface.evaluateJs(object.getString("function"), object.getString("args"));
+            } catch (Exception e) {
+                Log.d(TAG, "Exception", e);
+            }
         }
     }
 

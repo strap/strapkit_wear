@@ -6,8 +6,8 @@ package com.straphq.strapkit.strapkit_lib.util;
 public class StrapKitConstants {
 
     public static final String ACTION_SHOW_PAGE = "/show";
-    public static final String ACTION_LOG = "/log";
-    public static final String ACTION_SENSOR_DATA = "/sensor";
+    public static final String ACTION_LOG_EVENT = "/log_event";
+    public static final String ACTION_INITIALIZE_SENSOR_DATA = "/sensor_data";
     public static final String ACTION_HTTP_CLIENT = "/http";
     public static final String ACTION_START_UI = "/start_app";
 }

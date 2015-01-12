@@ -21,7 +21,9 @@ public abstract class StrapKitBaseView implements Serializable {
 
     public void onClickFunction(StrapKitBaseActivity activity, String function) {
         //StrapKitBridge.handleMessage(activity, "/show", function);
-        activity.sendMessage("/onClick", function);
+        if (function != null) {
+            activity.sendMessage("/onClick", function);
+        }
     }
 
 }

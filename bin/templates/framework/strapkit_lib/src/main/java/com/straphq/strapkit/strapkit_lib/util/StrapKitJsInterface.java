@@ -77,6 +77,10 @@ public class StrapKitJsInterface {
         init();
     }
 
+    @JavascriptInterface
+    public void initMetrics(String app_id) {
+
+    }
 
     @JavascriptInterface
     public void showPage(String json) {
@@ -144,11 +148,12 @@ public class StrapKitJsInterface {
             @Override
             public void run() {
                 try {
-                    String javascriptNoComments = javascript.replaceAll("(\\/\\*[\\w\\'\\s\\r\\n\\*]*\\*\\/)|(\\/\\/[\\w\\s\\']*)|(\\<![\\-\\-\\s\\w\\>\\/]*\\>)", "");
+                    String javascriptNoComments = javascript.replaceAll("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/|[ \\t]*//.*)", "");
                     String javascriptFunction = "javascript:var myMethod = " + javascriptNoComments + ";";
                     if (info != null) {
                         try {
-                            JSONObject object = new JSONObject(info);
+                            String cleanedArgs = info.replace("\\\"", "\"");
+                            JSONObject object = new JSONObject(cleanedArgs);
                             javascriptFunction = "javascript: var data = JSON.parse('" + object.toString() + "'); \n(" + javascriptNoComments + ")(data);";
                         } catch (Exception o) {
                             Log.d(TAG, "not an object");
@@ -163,6 +168,7 @@ public class StrapKitJsInterface {
                     } else {
                         javascriptFunction = javascriptFunction + " \n myMethod();";
                     }
+                    Log.d(TAG, javascriptFunction);
                     mWebView.loadUrl(javascriptFunction);
                 } catch (Exception e) {
                     Log.d(TAG, "exception", e);
