@@ -10,6 +10,8 @@ FILE_NAME="$1"
 SAMPLE_DIR=$CURRENT_DIR"/../$PROJECT_NAME"
 OUTPUT_DIR=$CURRENT_DIR"/../../../output/"
 
+mkdir -p $OUTPUT_DIR
+
 echo $SAMPLE_DIR
 echo $OUTPUT_DIR
 
