@@ -1,25 +1,16 @@
 package com.straphq.strapkit.strapkit_lib.util;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Handler;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
 import com.straphq.strapkit.strapkit_lib.messaging.StrapKitMessageService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by martinza on 12/31/14.
@@ -33,6 +24,7 @@ public class StrapKitJsInterface {
     boolean metricsEnabled = false;
 
     private static final String TAG = StrapKitJsInterface.class.getSimpleName();
+    private boolean loaded = false;
 
     /**
      * Instantiate the interface and set the context
@@ -74,6 +66,7 @@ public class StrapKitJsInterface {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
         mWebView.addJavascriptInterface(this, "strapkit_bridge");
+
         init();
     }
 
@@ -107,6 +100,7 @@ public class StrapKitJsInterface {
             public void OnHttpComplete(String callback, String info) {
                 evaluateJs(callback, info);
             }
+
         });
     }
 
@@ -132,9 +126,8 @@ public class StrapKitJsInterface {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                String html = "<html><script type=\"text/javascript\" src=\"file:///android_asset/js/lib/klass.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/page.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/view.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/card.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/httpClient.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/list.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/text.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/strapkit.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/app-example.js\"></script><body></body></html>";
-                mWebView.loadDataWithBaseURL("file:////android_asset/", html, "text/html", "utf-8", "");
-                //mWebView.loadUrl("javascript:strapkit.init()");
+                mWebView.loadUrl("file:///android_asset/index.html");
+                StrapKitJsInterface.this.loaded = true;
             }
         });
     }
@@ -148,6 +141,7 @@ public class StrapKitJsInterface {
             @Override
             public void run() {
                 try {
+                    if (!StrapKitJsInterface.this.loaded) return;
                     String javascriptNoComments = javascript.replaceAll("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/|[ \\t]*//.*)", "");
                     String javascriptFunction = "javascript:var myMethod = " + javascriptNoComments + ";";
                     if (info != null) {
