@@ -5,22 +5,6 @@ Need some kind of introduction/overview of what StrapKit JS is. Marketing type o
 ## Version
 0.0.1
 
-## Installation
-
-You need Gulp installed globally:
-
-```sh
-$ npm i -g gulp
-```
-
-```sh
-$ git clone [git-repo-url] dillinger
-$ cd dillinger
-$ npm i -d
-$ mkdir -p public/files/{md,html,pdf}
-$ gulp build --prod
-$ NODE_ENV=production node app
-```
 
 ## Write your first cross platform app
 
