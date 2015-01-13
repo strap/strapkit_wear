@@ -72,7 +72,7 @@ public class StrapKitJsInterface {
 
     @JavascriptInterface
     public void initMetrics(String app_id) {
-
+        mService.initializeStrapMetrics(app_id);
     }
 
     @JavascriptInterface

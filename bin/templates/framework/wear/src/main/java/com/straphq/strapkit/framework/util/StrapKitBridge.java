@@ -17,7 +17,6 @@ import com.straphq.strapkit.framework.view.StrapKitBaseView;
 import com.straphq.strapkit.framework.view.StrapKitCardFragment;
 import com.straphq.strapkit.framework.view.StrapKitListView;
 import com.straphq.strapkit.framework.view.StrapKitTextView;
-import com.straphq.strapkit.strapkit_lib.util.StrapKitConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;

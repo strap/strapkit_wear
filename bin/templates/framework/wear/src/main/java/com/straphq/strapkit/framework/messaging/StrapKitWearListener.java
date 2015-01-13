@@ -19,7 +19,8 @@ import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.straphq.strapkit.framework.StrapKitSplashActivity;
 import com.straphq.strapkit.framework.util.StrapKitBridge;
-import com.straphq.strapkit.strapkit_lib.util.StrapKitConstants;
+import com.straphq.strapkit.framework.util.StrapKitConstants;
+import com.straphq.wear_sdk.Strap;
 
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
     private static final String TAG = StrapKitWearListener.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
+
+    private Strap mStrap;
 
     public static final String RECEIVER_ON_CLICK = "com.straphq.strapkit.framework.messaging.RECEIVER_ON_CLICK";
 
@@ -69,6 +72,9 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
             Intent intent = new Intent();
             intent.setAction(StrapKitSplashActivity.READY_TO_CLOSE_FILTER);
             sendBroadcast(intent);
+        } else if (messageEvent.getPath().equals(StrapKitConstants.ACTION_INITIALIZE_SENSOR_DATA)) {
+            mStrap = new Strap(mGoogleApiClient, getApplicationContext(), new String(messageEvent.getData()));
+            mStrap.logEvent("/init");
         }
         Log.d(TAG, "message received: " + messageEvent.getPath());
     }
