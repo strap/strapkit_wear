@@ -132,6 +132,7 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
         Log.d(TAG, "Successfully connected");
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.DataApi.addListener(mGoogleApiClient, this);
+        initializeJs();
     }
 
     @Override

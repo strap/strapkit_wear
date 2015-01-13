@@ -11,6 +11,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.straphq.strapkit.strapkit_lib.messaging.StrapKitMessageService;
 
 import org.json.JSONArray;
@@ -80,6 +82,20 @@ public class StrapKitJsInterface {
     @JavascriptInterface
     public void initMetrics(String app_id) {
         mService.initializeStrapMetrics(app_id);
+    }
+
+    @JavascriptInterface
+    public void logEvent(String event, String data) {
+        JsonObject object = new JsonObject();
+        object.addProperty("event", event);
+        if (data.equals("undefined")) {
+            data = null;
+            object.addProperty("data", data);
+        } else {
+            JsonParser parser = new JsonParser();
+            object.add("data", parser.parse(data));
+        }
+        mService.sendMessage(StrapKitConstants.ACTION_LOG_EVENT, object.toString());
     }
 
     @JavascriptInterface
