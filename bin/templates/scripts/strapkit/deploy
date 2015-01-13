@@ -1,0 +1,3 @@
+adb -d forward tcp:5601 tcp:5601
+
+adb install -r ./output/mobile-release.apk
