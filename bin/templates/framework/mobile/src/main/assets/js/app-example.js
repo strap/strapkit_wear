@@ -76,7 +76,7 @@ StrapKit.HttpClient(
     resultsMenu.setOnItemClick(function(e) {
           // Get that forecast
         var forecast = e.item.data;
-        date
+        
         // Assemble body string
         var content = forecast.weather[0].description;
        

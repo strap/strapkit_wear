@@ -2,6 +2,7 @@ package com.straphq.strapkit.strapkit_lib.messaging;
 
 import android.app.Service;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +13,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
@@ -20,9 +24,12 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.straphq.strapkit.strapkit_lib.util.StrapKitConstants;
 import com.straphq.strapkit.strapkit_lib.util.StrapKitJsInterface;
+import com.straphq.wear_sdk.StrapMetrics;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 public class StrapKitMessageService extends Service implements DataApi.DataListener, MessageApi.MessageListener,
@@ -124,7 +131,7 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
         // Handle Google Api Client connected
         Log.d(TAG, "Successfully connected");
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
-        initializeJs();
+        Wearable.DataApi.addListener(mGoogleApiClient, this);
     }
 
     @Override
@@ -139,6 +146,25 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
 
+        for (DataEvent event : dataEvents) {
+            Log.d(TAG, "uri: " + event.getDataItem().getUri().getPathSegments().get(0));
+            DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
+            DataMap map = dataMapItem.getDataMap();
+
+            //can strap can handle the data map? If so, strap should handle the event
+            if (mStrapMetrics != null && mStrapMetrics.canHandleMsg(event)) {
+                // Log.d("DataEvent","Received new strapmetrics event!! " + map.toString());
+                try {
+                    mStrapMetrics.processReceiveData(map);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // must call release() here to prevent dataEvents from growing too large.
+        dataEvents.release();
     }
 
     @Override
@@ -166,5 +192,18 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
             // The Android Wear app is not installed... we need to alert the app
             Log.d(TAG, "Wear api is not available");
         }
+    }
+
+    private boolean mStrapMetricsInitialized = false;
+    private StrapMetrics mStrapMetrics;
+
+    public void initializeStrapMetrics(String app_id) {
+
+        mStrapMetrics = new StrapMetrics();
+
+        sendMessage(StrapKitConstants.ACTION_INITIALIZE_SENSOR_DATA, app_id);
+
+        mStrapMetricsInitialized = true;
+
     }
 }

@@ -1,10 +1,9 @@
-package com.straphq.strapkit.strapkit_lib.util;
+package com.straphq.strapkit.framework.util;
 
 /**
  * Created by martinza on 1/12/15.
  */
 public class StrapKitConstants {
-
 
     public static final String ACTION_SHOW_PAGE = "/show";
     public static final String ACTION_LOG_EVENT = "/log_event";

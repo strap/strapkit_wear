@@ -21,7 +21,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.straphq.strapkit.framework.R;
 import com.straphq.strapkit.framework.StrapKitBaseActivity;
-import com.straphq.strapkit.strapkit_lib.messaging.StrapKitMessageService;
 
 import org.json.JSONObject;
 

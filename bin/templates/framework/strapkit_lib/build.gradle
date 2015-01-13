@@ -24,4 +24,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:+'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'com.google.code.gson:gson:2.2.+'
+    wearApp project(':wear')
+    compile(name: 'mobile', ext: 'aar')
 }
