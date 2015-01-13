@@ -79,7 +79,7 @@ var StrapKit = {
 			window.strapkit_bridge.initMetrics(app_id);
 		},
 		logEvent: function(event_path, event_data) {
-			window.strapkit_bridge.logEvent(event_path, event_data);
+			window.strapkit_bridge.logEvent(event_path, JSON.stringify(event_data));
 		}
 	}
 }

@@ -7,6 +7,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.straphq.strapkit.strapkit_lib.messaging.StrapKitMessageService;
 
 import org.json.JSONArray;
@@ -76,6 +78,20 @@ public class StrapKitJsInterface {
     }
 
     @JavascriptInterface
+    public void logEvent(String event, String data) {
+        JsonObject object = new JsonObject();
+        object.addProperty("event", event);
+        if (data.equals("undefined")) {
+            data = null;
+            object.addProperty("data", data);
+        } else {
+            JsonParser parser = new JsonParser();
+            object.add("data", parser.parse(data));
+        }
+        mService.sendMessage(StrapKitConstants.ACTION_LOG_EVENT, object.toString());
+    }
+
+    @JavascriptInterface
     public void showPage(String json) {
         try {
             mService.sendMessage(StrapKitConstants.ACTION_SHOW_PAGE, json);
@@ -128,6 +144,9 @@ public class StrapKitJsInterface {
             public void run() {
                 mWebView.loadUrl("file:///android_asset/index.html");
                 StrapKitJsInterface.this.loaded = true;
+                // String html = "<html><script type=\"text/javascript\" src=\"file:///android_asset/js/lib/klass.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/page.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/view.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/card.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/httpClient.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/list.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/text.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/strapkit.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/app.js\"></script><body></body></html>";
+                // mWebView.loadDataWithBaseURL("file:////android_asset/", html, "text/html", "utf-8", "");
+                //mWebView.loadUrl("javascript:strapkit.init()");
             }
         });
     }
@@ -171,4 +190,3 @@ public class StrapKitJsInterface {
         });
     }
 }
-

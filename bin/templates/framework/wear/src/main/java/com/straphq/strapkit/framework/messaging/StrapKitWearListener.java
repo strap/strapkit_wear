@@ -22,6 +22,9 @@ import com.straphq.strapkit.framework.util.StrapKitBridge;
 import com.straphq.strapkit.framework.util.StrapKitConstants;
 import com.straphq.wear_sdk.Strap;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -75,6 +78,31 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
         } else if (messageEvent.getPath().equals(StrapKitConstants.ACTION_INITIALIZE_SENSOR_DATA)) {
             mStrap = new Strap(mGoogleApiClient, getApplicationContext(), new String(messageEvent.getData()));
             mStrap.logEvent("/init");
+        } else if (messageEvent.getPath().equals(StrapKitConstants.ACTION_LOG_EVENT)) {
+            String data = new String(messageEvent.getData());
+            try {
+                JSONObject jsonObject = new JSONObject(data);
+                String event = jsonObject.getString("event");
+                String eventData = jsonObject.getString("data");
+                if (eventData != null && !eventData.equals("null")) {
+                    try {
+                        mStrap.logEvent(event, new JSONObject(eventData));
+                    } catch (Exception e) {
+                        try {
+                            JSONObject jsonData = new JSONObject();
+                            jsonData.put("data", new JSONArray(eventData));
+                            mStrap.logEvent(event, jsonData);
+                        } catch (Exception ex) {
+                            mStrap.logEvent(event);
+                        }
+                    }
+                } else {
+                    mStrap.logEvent(event);
+                }
+            } catch (Exception e) {
+                Log.d(TAG, "Error logging", e);
+            }
+
         }
         Log.d(TAG, "message received: " + messageEvent.getPath());
     }

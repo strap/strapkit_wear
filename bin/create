@@ -76,7 +76,7 @@ done
 BINDIR=$( cd "$( dirname "$SCRIPT" )" && pwd )
 
 PROJECT_PARENT=$(dirname "$PROJECT_PATH")
-PROJECT_TEMPLATE_DIR=${PROJECT_TEMPLATE_DIR:-"$BINDIR/templates/SampleProject"}
+PROJECT_TEMPLATE_DIR=${PROJECT_TEMPLATE_DIR:-"$BINDIR/templates/framework"}
 SCRIPT_TEMPLATE_DIR=$BINDIR/templates/scripts
 
 # check whether the project path exists and is not empty

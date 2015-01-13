@@ -46,14 +46,16 @@ StrapKit.Metrics.init(app_id);
 var splashPage = StrapKit.UI.Page();
  
 // Text element to inform user
-var card = StrapKit.UI.Card({
-  title: 'Weather App',
-  body:'Loading data now...'
+var card = StrapKit.UI.TextView({
+  position: 'center',
+  text:'Loading data now...'
 });
  
 // Add to splashPage and show
 splashPage.addView(card);
 splashPage.show();
+
+StrapKit.Metrics.logEvent("/show/splashPage");
 
 // Make request to openweathermap.org
 StrapKit.HttpClient(
@@ -65,11 +67,12 @@ StrapKit.HttpClient(
 
     var menuItems = parseFeed(data, 10);
 
+    StrapKit.Metrics.logEvent("/httpClient/success", menuItems);
+
     var resultsPage = StrapKit.UI.Page();
     // Construct Menu to show to user
     var resultsMenu = StrapKit.UI.ListView({
-        items: menuItems,
-        data: data.list
+        items: menuItems
     });
 
     // Add an action for SELECT
@@ -97,11 +100,15 @@ StrapKit.HttpClient(
         });
         detailPage.addView(detailCard);
         detailPage.show();
+
+        StrapKit.Metrics.logEvent("show/detailPage", e.item.data);
     });
  
     // Show the Menu, hide the splash
     resultsPage.addView(resultsMenu);
     resultsPage.show();
+
+    StrapKit.Metrics.logEvent("show/resultsPage");
 
   },
   function(error) {
