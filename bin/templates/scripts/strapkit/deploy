@@ -19,34 +19,34 @@ if [ $(echo "$devices" | wc -l) -ne 2 ]; then
 fi
 
 echo
-echo "Installing onto handheld"
+echo "Installing onto wearable"
 
 handheld=
 wearable=
 for device in $devices; do
-    if [ -z "$handheld" ]; then
-        if adb -s "$device" install output/mobile-release.apk; then
-            handheld="$device"
-        else
+    if [ -z "$wearable" ]; then
+        if adb -s "$device" install output/wear-release.apk; then
             wearable="$device"
+        else
+            handheld="$device"
         fi
     else
-        wearable="$device"
+        handheld="$device"
     fi
 done
 
-# echo "handheld: $handheld"
-# echo "wearable: $wearable"
+echo "handheld: $handheld"
+echo "wearable: $wearable"
 
-if [ -z "$handheld" ]; then
-    fail "Failed to install application onto handheld"
+if [ -z "$wearable" ]; then
+    fail "Failed to install application onto wearable"
 fi
 
 echo "Done!"
 echo
-echo "Installing onto wearable"
+echo "Installing onto handheld"
 
-if adb -s "$wearable" install output/wear-release.apk; then
+if adb -s "$handheld" install output/mobile-release.apk; then
     echo "Done!"
 else
     fail "Failed to install application onto wearable"
