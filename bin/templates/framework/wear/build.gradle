@@ -6,7 +6,7 @@ android {
         strapkit {
             keyAlias 'strapkit'
             keyPassword 'strapkit'
-            storeFile file('/home/martinza/Projects/Strap/strapkit.jks')
+            storeFile file('../strapkit.jks')
             storePassword 'strapkit'
         }
     }
