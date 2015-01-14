@@ -63,6 +63,7 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+        mGoogleApiClient.disconnect();
         unregisterReceiver(startAppReceiver);
         unregisterReceiver(onClickReceiver);
     }
