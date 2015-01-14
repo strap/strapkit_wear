@@ -6,11 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,6 +32,10 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        if (((StrapKitApplication)getApplication()).hasFinishedSplash()) {
+            finish();
+        }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this.getApplicationContext())
                 .addApi(Wearable.API)

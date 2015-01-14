@@ -23,6 +23,10 @@ public class StrapKitApplication extends Application {
         }
     }
 
+    public boolean hasFinishedSplash() {
+        return mHasFinishedSplash;
+    }
+
     public void finishedSplashPage() {
         mHasFinishedSplash = true;
         Collections.reverse(baseActivities);
