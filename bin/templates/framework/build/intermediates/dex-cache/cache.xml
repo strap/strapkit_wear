@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/martinza/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.2.0/c0b52915a48fa91b1b94a28d4a2997bac5f524df/okio-1.2.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="c0b52915a48fa91b1b94a28d4a2997bac5f524df">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/debug/okio-1.2.0-5c6c2c598b83c70ae3e74aaee38eb904482ba104.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-b74e6ddac46d3e45e101a1ed948e1aadee5b3d95.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/pre-dexed/debug/classes-b618830996b2b3f597213e02ed983a8d6b9e41f6.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/strapkit-wear/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="89925781ab0d46062985165c8b6a779616b8f819">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/debug/classes-f30729b99f6c632d6591f8f21d1ac00fbc09bd18.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="95482e7c792a7c0d5a9d5461e97726bd54fe9549">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/classes-14242e5e2de560a6b59bf8cccf59c8a14b0fa11b.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Applications/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/support-annotations-21.0.0-4855dce4dfca260ed5238bf4e93b3777cefe47b8.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/pre-dexed/debug/classes-927894b9de51020b3cb944c76813c41e2822fa50.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="efeda77c808750cb670ee9c48d8a1835d89dbcb2">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/classes-82dd2387bf31de9112009dc28325f30a72e8c7d6.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/com.google.android.support/wearable/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="27f19641b81b1078e653d2f0e5d1ed44d158a785">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/classes-867e7781961ed21defd15d56fe66de15254f9f91.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/release/classes-036a3b5553439a17dcdc2c2210ece5c819097902.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/classes-a51dcae6f61f0460839acaf9f23096d5265578fd.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/strapmetrics-wear/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="fcb41c0f875204308d382f099e9212c65dcb581f">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/classes-0ccc7234e739b37d41fe444485a964b7fdad1605.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="95482e7c792a7c0d5a9d5461e97726bd54fe9549">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/classes-604b35ae722aed364faa36c476312a5d6bcf9240.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/release/classes-285e9a487069e575ee00f3046891f1e300a4acef.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/com.google.android.support/wearable/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="27f19641b81b1078e653d2f0e5d1ed44d158a785">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/classes-92f0fcba66af4f943e56bf89dbd69a01482470b3.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/classes-22d99989434156a67d5f62937ef3ea965ed4ce6b.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="6384c6cd674a22610b932d9464aa6938d067f285">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/classes-694b26bff8bc5372207dd5284bf2cfcf0954840a.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Applications/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/release/support-annotations-21.0.3-8865c8d5abaa7baee69422c122470bc20eefdd35.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/exploded-aar/strapmetrics-mobile/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1c54e7a862bc9eb6bed3cdd2d0e8a13477203a7d">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/pre-dexed/debug/classes-ce9df049ce9b05932ef05ce2058d633e64b307fd.jar" />
+    </item>
+    <item
+        jar="/home/martinza/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/debug/gson-2.2.4-c7cbdb1486a3070ec2b584abddcfc76c64e86459.jar" />
+    </item>
+    <item
+        jar="/home/martinza/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.2.0/959c454243581fdf730abfd4f4745441724bcf2c/okhttp-2.2.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="959c454243581fdf730abfd4f4745441724bcf2c">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/debug/okhttp-2.2.0-7cd9f002bc9abd754b619a08bdfa60e92303e74c.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/exploded-aar/strapmetrics-mobile/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1c54e7a862bc9eb6bed3cdd2d0e8a13477203a7d">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/debug/classes-d217c900febe403fe78ddc2954bd888ea6becca0.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/release/classes-393f06d01b90c9f199f3655245805f29d7d8347f.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="efeda77c808750cb670ee9c48d8a1835d89dbcb2">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/classes-5e93cdc9d9eea676bc421dc2d41ddf75c682a43d.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/pre-dexed/debug/classes-c2688e77fd51c012533b4524eb34ad0e79d65f6a.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/exploded-aar/strapkit_lib-mobile/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="5a120b50f988f4a174c688eb04fa03ca8c7d10e3">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/mobile/build/intermediates/pre-dexed/debug/classes-b96fcaf763809dc9f690c6179d7dd1fd5e19151c.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/strapkit-wear/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="16ca9066d1d673eaccce3c308d41de4b1336efd5">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/classes-e9e9041dc6eb8e54f6fbd2460f1a1a8c7a5cf0da.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/strapmetrics-wear/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="fcb41c0f875204308d382f099e9212c65dcb581f">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/debug/classes-ff1bc92fb2d5e85bc4a6fa62939c34399dda1937.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-b2a998b94169f1422572a6cd0af7412e5465d219.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/release/internal_impl-21.0.3-e85ea8a5e8df685a29c08eddb5ffa7b95faae84f.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/exploded-aar/strapkit_lib/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="9f1a2006c4e207f0ceea0c7a9abee22c3aeccb39">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/mobile/build/intermediates/pre-dexed/release/classes-2c2bb01fe5ead4323846381739033b23a41247d8.jar" />
+    </item>
+    <item
+        jar="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="6384c6cd674a22610b932d9464aa6938d067f285">
+        <dex dex="/home/martinza/Projects/Strap/strapkit_wear/bin/templates/framework/wear/build/intermediates/pre-dexed/debug/classes-48efb7a844f2b4362ccd85497c33c410463871d1.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/wear/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="89925781ab0d46062985165c8b6a779616b8f819">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/classes-01c96d914c4c527357aa8b6f40bdcdfb9aa87e9f.jar" />
+    </item>
+    <item
+        jar="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex dex="/home/martinza/AndroidStudioProjects/MySampleApp/wear/build/intermediates/pre-dexed/release/internal_impl-21.0.0-af664b8ae031efd474667a425fee49c14604302c.jar" />
+    </item>
+
+</items>
