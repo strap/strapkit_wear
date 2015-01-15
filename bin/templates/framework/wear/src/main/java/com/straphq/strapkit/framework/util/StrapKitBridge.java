@@ -37,9 +37,7 @@ public class StrapKitBridge {
         switch (path){
             case StrapKitConstants.ACTION_SHOW_PAGE:
                 try {
-                    JsonParser parser = new JsonParser();
-                    JsonArray array = parser.parse(json).getAsJsonObject().getAsJsonArray("views");
-                    showPage(context, array);
+                    showPage(context, json);
                 } catch (Exception e) {
                     Log.d(TAG, "Failed to parse json: " + json, e);
                 }
@@ -50,7 +48,11 @@ public class StrapKitBridge {
     }
 
 
-    public static void showPage(Context context, JsonArray array) throws JSONException {
+    public static void showPage(Context context, String json) throws JSONException {
+
+        JsonParser parser = new JsonParser();
+        JsonArray array = parser.parse(json).getAsJsonObject().getAsJsonArray("views");
+
         Gson gson = new Gson();
         ArrayList<StrapKitBaseView> activityViews = new ArrayList<>();
         for (JsonElement element : array) {
@@ -79,8 +81,14 @@ public class StrapKitBridge {
             }
         }
 
+        JSONObject jsonObject = new JSONObject(json);
+        String backgroundColor = jsonObject.getString("backgroundColor");
+        if (backgroundColor.equals("null")) {
+            backgroundColor = null;
+        }
         Intent intent = new Intent(context, StrapKitBaseActivity.class);
         intent.putExtra(StrapKitBaseActivity.ARGS_VIEW_DEFINITIONS, activityViews);
+        intent.putExtra(StrapKitBaseActivity.ARGS_BACKGROUND_COLOR, backgroundColor);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ((StrapKitApplication) context.getApplicationContext()).launchNewActivity(intent);
     }

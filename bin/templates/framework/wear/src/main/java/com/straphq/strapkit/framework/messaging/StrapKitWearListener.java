@@ -48,6 +48,7 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
         mGoogleApiClient = new GoogleApiClient.Builder(this.getApplicationContext())
                 .addApi(Wearable.API)
                 .build();
+
         mGoogleApiClient.connect();
 
         IntentFilter filter = new IntentFilter();

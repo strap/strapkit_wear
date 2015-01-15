@@ -39,12 +39,12 @@ var AndroidPage = Page.extend({
 		}
 		var json = {
 			views: viewString,
-			pageOpen: this.pageOpen
+			pageOpen: this.pageOpen,
+			backgroundColor: this.backgroundColor
 		};	
 		window.strapkit_bridge.showPage(stringify(json));
 	},
 	hide: function() {
-		console.log('hide');
 		this.pageOpen = false;
 		window.strapkit_bridge.hidePage(this);
 	}

@@ -93,6 +93,7 @@ StrapKit.HttpClient(
           Math.round(forecast.wind.deg) + '°';
        
         var detailPage = StrapKit.UI.Page();
+        detailPage.setBackgroundColor('#A6D785');
         // Create the Card for detailed view
         var detailCard = StrapKit.UI.Card({
           title:e.item.subtitle,

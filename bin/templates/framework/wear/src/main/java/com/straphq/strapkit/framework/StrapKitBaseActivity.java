@@ -1,9 +1,12 @@
 package com.straphq.strapkit.framework;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,6 +26,7 @@ public class StrapKitBaseActivity extends Activity implements GoogleApiClient.Co
     private static final String TAG = StrapKitBaseActivity.class.getSimpleName();
 
     public static final String ARGS_VIEW_DEFINITIONS = "args_view_definitions";
+    public static final String ARGS_BACKGROUND_COLOR = "args_background_color";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -47,6 +51,12 @@ public class StrapKitBaseActivity extends Activity implements GoogleApiClient.Co
             for (StrapKitBaseView view : views) {
                 view.initialize(this);
             }
+        }
+
+        String backgroundColor = getIntent().getStringExtra(ARGS_BACKGROUND_COLOR);
+        if (backgroundColor != null) {
+            View view = findViewById(R.id.base_view);
+            view.setBackgroundColor(Color.parseColor(backgroundColor));
         }
     }
 
