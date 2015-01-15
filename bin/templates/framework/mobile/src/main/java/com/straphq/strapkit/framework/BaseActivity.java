@@ -6,20 +6,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.EditText;
 
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.NotificationCompat.WearableExtender;
 
 import com.straphq.strapkit.strapkit_lib.messaging.StrapKitMessageService;
-import com.straphq.strapkit.strapkit_lib.util.StrapKitJsInterface;
-
-import java.io.InputStream;
-
 
 public class BaseActivity extends ActionBarActivity {
 

@@ -33,9 +33,7 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        if (((StrapKitApplication)getApplication()).hasFinishedSplash()) {
-            finish();
-        }
+        ((StrapKitApplication) getApplication()).setHasShownSplash(false);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this.getApplicationContext())
                 .addApi(Wearable.API)
@@ -53,7 +51,7 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
                 mTimeHasPassed = true;
                 closeSplashActivity();
             }
-        }, 2600);
+        }, 1500);
     }
 
     @Override
@@ -100,5 +98,17 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
         } catch (Exception e) {
             Log.d(TAG, "failed");
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 }

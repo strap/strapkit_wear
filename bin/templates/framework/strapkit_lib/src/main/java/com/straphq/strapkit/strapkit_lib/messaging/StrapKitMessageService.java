@@ -66,27 +66,29 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
     public void onCreate() {
         super.onCreate();
         //init();
+        init();
         Log.d(TAG, "Successfully created service");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        init();
+        //init();
         Log.d(TAG, "Initialized and started service");
         return START_STICKY;
     }
 
     private void init() {
 
+        Log.d(TAG, "Initializing google api client");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-        }
+        Log.d(TAG, "Connecting to google api");
+        mGoogleApiClient.connect();
+
     }
 
     private void initializeJs() {
@@ -121,7 +123,7 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
 
     @Override
     public void onDestroy() {
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
@@ -132,7 +134,6 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
         Log.d(TAG, "Successfully connected");
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.DataApi.addListener(mGoogleApiClient, this);
-        initializeJs();
     }
 
     @Override
@@ -189,6 +190,7 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "OnConnectionFailed: " + connectionResult.getErrorCode());
         if (connectionResult.getErrorCode() == ConnectionResult.API_UNAVAILABLE) {
             // The Android Wear app is not installed... we need to alert the app
             Log.d(TAG, "Wear api is not available");
