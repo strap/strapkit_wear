@@ -55,6 +55,7 @@ Assuming you set the ANDROID_HOME environmental variable and added ANDROID_HOME/
 $ android sdk
 ```
 You need to install or update the following packages from the SDK Manager:
+
 1. Tools > Android SDK Tools
 2. Tools > Android SDK Platform-tools
 3. Tools > Android SDK Build-tools Rev. 21.1.1
