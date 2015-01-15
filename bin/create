@@ -119,18 +119,18 @@ mkdir $R
 # cp -r "$PROJECT_TEMPLATE_DIR"/* $R
 
 # Copy non-edited directories
-cp -r $PROJECT_TEMPLATE_DIR/{.idea,gradle,strapkit_lib} "$R/."
+cp -r $PROJECT_TEMPLATE_DIR/{.idea,gradle,strapkit_lib,wear} "$R/."
 
 # Copy non-edited files
-cp -r $PROJECT_TEMPLATE_DIR/{.gitignore,build.gradle,framework.iml,gradle.properties,gradlew,gradlew.bat,settings.gradle,strapkit.jks} "$R/."
+cp -r $PROJECT_TEMPLATE_DIR/{build.gradle,framework.iml,gradle.properties,gradlew,gradlew.bat,local.properties,settings.gradle} "$R/."
 
 # Setup Wear
-mkdir -p "$R/wear"
-cp -r $PROJECT_TEMPLATE_DIR/wear/{libs,.gitignore,build.gradle,proguard-rules.pro,wear.iml} "$R/wear/."
-mkdir -p "$R/wear/src/main"
-cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/{res,AndroidManifest.xml} "$R/wear/src/main/."
-mkdir -p "$R/wear/src/main/$PACKAGE_DIR"
-cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/java/com/straphq/strapkit/framework/* "$R/wear/src/main/$PACKAGE_DIR"
+# mkdir -p "$R/wear"
+# cp -r $PROJECT_TEMPLATE_DIR/wear/{libs,.gitignore,build.gradle,proguard-rules.pro,wear.iml} "$R/wear/."
+# mkdir -p "$R/wear/src/main"
+# cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/{res,AndroidManifest.xml} "$R/wear/src/main/."
+# mkdir -p "$R/wear/src/main/$PACKAGE_DIR"
+# cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/java/com/straphq/strapkit/framework/* "$R/wear/src/main/$PACKAGE_DIR"
 
 sed -e "s@com.straphq.strapkit.framework@$PACKAGE@g" "$R/wear/src/main/AndroidManifest.xml" > /tmp/out
 cat /tmp/out >  "$R/wear/src/main/AndroidManifest.xml"
@@ -142,7 +142,7 @@ cp -r $PROJECT_TEMPLATE_DIR/mobile/{libs,.gitignore,build.gradle,proguard-rules.
 mkdir -p "$R/mobile/src/main"
 cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/{assets,res,AndroidManifest.xml} "$R/mobile/src/main/."
 mkdir -p "$R/mobile/src/main/$PACKAGE_DIR"
-cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/java/com/straphq/strapkit/framework/* "$R/mobile/src/main/$PACKAGE_DIR"
+cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/java/com/straphq/teststrapkit/mysampleapp/* "$R/mobile/src/main/$PACKAGE_DIR"
 
 echo "BINDIR $BINDIR"
 echo "PROJECT_PATH $PROJECT_PATH"
