@@ -1,8 +1,11 @@
 package com.straphq.strapkit.framework.view;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.wearable.view.WearableListView;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +18,7 @@ public class StrapKitListItemView extends LinearLayout
         implements WearableListView.OnCenterProximityListener {
 
     private TextView mName;
+    private ImageView mBaseIcon;
 
     private final float mFadedTextAlpha;
     private final int mFadedCircleColor;
@@ -44,15 +48,18 @@ public class StrapKitListItemView extends LinearLayout
         // These are defined in the layout file for list items
         // (see next section)
         mName = (TextView) findViewById(R.id.base_text);
+        mBaseIcon = (ImageView) findViewById(R.id.base_icon);
     }
 
     @Override
     public void onCenterPosition(boolean animate) {
         mName.setAlpha(1f);
+        ((GradientDrawable) mBaseIcon.getDrawable()).setColor(mChosenCircleColor);
     }
 
     @Override
     public void onNonCenterPosition(boolean animate) {
         mName.setAlpha(mFadedTextAlpha);
+        ((GradientDrawable) mBaseIcon.getDrawable()).setColor(mFadedCircleColor);
     }
 }

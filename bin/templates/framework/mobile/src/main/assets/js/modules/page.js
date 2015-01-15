@@ -2,6 +2,7 @@
 var Page = klass({
 	views: [],
 	pageOpen: false,
+	backgroundColor: null,
 	initialize: function(views) {
 		if (typeof views === 'Array') {
 			this.views = views;
@@ -14,10 +15,12 @@ var Page = klass({
 	},
 	addView: function(view) {
 		this.views.push(view);
-		console.log("View count: " + this.views.length);
 	},
 	getViews: function() {
 		return this.views;
+	},
+	setBackgroundColor: function(color) {
+		this.backgroundColor = color;
 	},
 	show: function() {
 		this.pageOpen = true;
