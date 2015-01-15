@@ -25,7 +25,7 @@ handheld=
 wearable=
 for device in $devices; do
     if [ -z "$wearable" ]; then
-        if adb -s "$device" install output/wear-release.apk; then
+        if [ $(adb -s "$device" install output/wear-release.apk | grep "Failure" | wc -l) -eq 0 ]; then
             wearable="$device"
         else
             handheld="$device"
@@ -46,8 +46,8 @@ echo "Done!"
 echo
 echo "Installing onto handheld"
 
-if adb -s "$handheld" install output/mobile-release.apk; then
+if [ $(adb -s "$handheld" install output/mobile-release.apk | grep "Failure" | wc -l) -eq 0 ]; then
     echo "Done!"
 else
-    fail "Failed to install application onto wearable"
+    fail "Failed to install application onto handheld"
 fi
