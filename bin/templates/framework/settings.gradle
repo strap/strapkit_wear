@@ -1,1 +1,1 @@
-include ':mobile', ':wear', ':strapkit_lib'
+include ':mobile', ':wear'
