@@ -17,6 +17,6 @@ mkdir -p $CURRENT_DIR/../libraries/assets/
 cp $CURRENT_DIR/../../../js/$APP_FILE $CURRENT_DIR/../libraries/assets/app.js
 cd $SAMPLE_DIR
 
-./gradlew aR
-cp $SAMPLE_DIR/mobile/build/outputs/apk/mobile-release-unsigned.apk $OUTPUT_DIR/
-cp $SAMPLE_DIR/wear/build/outputs/apk/wear-release-unsigned.apk $OUTPUT_DIR/
+./gradlew assembleDebug
+cp $SAMPLE_DIR/mobile/build/outputs/apk/mobile-debug.apk $OUTPUT_DIR/
+cp $SAMPLE_DIR/wear/build/outputs/apk/wear-debug.apk $OUTPUT_DIR/
