@@ -19,6 +19,8 @@ if [ "$1" == "" ];then
     APP_FILE="app.js"
 fi
 cp $CURRENT_DIR/../../../js/$APP_FILE $SAMPLE_DIR/mobile/src/main/assets/app.js
+mkdir -p $CURRENT_DIR/../libraries/assets/
+cp $CURRENT_DIR/../../../js/$APP_FILE $CURRENT_DIR/../libraries/assets/app.js
 cd $SAMPLE_DIR
 
 ./gradlew aR
