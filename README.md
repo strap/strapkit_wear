@@ -1,172 +1,113 @@
-# StrapKit JS
-
-Need some kind of introduction/overview of what StrapKit JS is. Marketing type of material.
+# Strap Kit JS Android Wear
 
 ## Version
-0.0.1
+0.2.0
 
-## LICENSE
+## License
 
 See [LICENSE](LICENSE)
 
+## Dependencies
 
-## Write your first cross platform app
+See [README-Dependencies.md](README-Dependencies.md)
 
-### Page
-A Page is the container for all your app's UI. When you create a new page, you are bringing the user to a different set of looks and actions.
+## Create your Android Wear app from Strap Kit JS
 
-#### Example
-
-```javascript
-var splashPage = StrapKit.UI.Page();
-
-var card = StrapKit.UI.Card({
-  title: 'Weather App',
-  body:'Loading data now...'
-});
-
-// Adds content to a Page
-splashPage.addView(card);
-
-// Tells your wearable app to show this page
-splashPage.show();
+From your strap kit project folder
+```sh
+$ strapkit platform add android-wear
 ```
-#### Initialize
-```javascript
-var page = StrapKit.UI.Page();
+And that't it!
+#### Build
+```sh
+$ strapkit build android-wear
 ```
-OR
-```javascript
-var page = StrapKit.UI.Page(cardView);
-var page = StrapKit.UI.Page([textView, anotherView]);
-```
-#### Add View
-```javascript
-page.addView(textView);
-```
-#### Show Page
-```javascript
-page.show();
+#### Deploy
+This will install your the debug version of your app on your mobile and wear devices. Make sure they are either emulators or connected through USB to your computer.
+```sh
+$ strapkit install android-wear
 ```
 
-### Card View
-Card is a standard wearable UI compenent accross all platforms. This UI compenent typically has a title and a body associated with it, and can be clickable. This must be added to a Page in order for the compenent to be shown.
-
-#### Example
-```javascript
-var card = StrapKit.UI.Card({
-  title: "My First App",
-  body: "Writing apps are easy with StrapKit JS"
-});
-myPage.addView(card);
+## Add to Existing Android Phone App
+Minimum SDK 4.3
+#### Create a Wear project within your App
+1. Make sure you have the SDK for API 20 installed
+2. You need to import an Android Wear module. Right click on the your project and select "Open Module Settings" Then click the "plus" button which should bring up a wizard to add a Wear Module.
+3. Module name should be 'wear'
+4. Make sure your 'wear' package name is the same as your app's package
+5. Choose No Activity to create your module
+6. In your mobile app's gradle file  
+```sh
+dependencies {
+        wearApp project(':wear')
+}
 ```
-#### Initialize
-```javascript
-var card = StrapKit.UI.Card({
-    title: 'My Title',  // The title of your card
-    body: 'My Body',  // The body of your card
-    onClick: function() { // What happens when you click on the card
-        console.log('My Function');
+
+#### Add Strap Kit JS to your App
+
+
+First you need to generate the necessary files from your root directory:
+```sh
+$ strapkit platform add android-wear
+$ cd platforms/android-wear/libraries
+```
+In the libraries folder, you will see 4 aar files and an assets folder which need to be copied.
+1. Copy the contents of the assets folder into your mobile apps "assets" folder.
+2. Mobile: Copy both "*-mobile.aar" files into your mobile's /libs directory. In your build.gradle:
+```
+repositories {
+    flatDir {
+        dirs 'libs'
     }
-});
+}
+dependencies {
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile(name: 'strapkit_lib-mobile', ext: 'aar')
+    compile(name: 'strapmetrics-mobile', ext: 'aar')
+}
 ```
-#### Set On Click Function
-```javascript
-card.setOnClick(function() {
-    console.log("My Card was clicked");
-});
-```
-### TextView
-TextView is a standard wearable UI compenent accross all platforms. This UI compenent can show text and a position of your your choosing.
-#### Example
-```javascript
-var textView = StrapKit.UI.TextView({
-    position: "center",
-    text: "Loading weather data..."
-});
-myPage.addView(textView);
-```
-#### Position
-```javascript
-StrapKit.UI.TextView({
-    position: 'center|right|left'
-    // center: puts text center justified within your page
-    // right: puts text right justified within your page
-    // left (default): puts text left justificed within your page
-});
-```
-### ListView
-ListView is a standard wearable UI compenent accross all platforms. This UI compenent will show a list of items defined by you. And Item will contain a title and a subtitle as strings. To make the app more interactive, you can attach an object to and Item as data.
-#### Example
-```javascript
-var menuItems = [
-    {
-        title: 'My Title 1',
-        subtitle: 'My Subtitle 1',
-        data: {info: "My Info 1"}
-    },
-    {
-        title: 'My Title 2',
-        subtitle: 'My Subtitle 2',
-        data: {info: "My Info 2"}
-    }];
+3. Mobile: Add into your Application or Launch Activity:
+```java
+    import com.straphq.strapkit.strapkit_lib.messaging.StrapKitMessageService;
 
-var resultsMenu = StrapKit.UI.ListView({
-    items: menuItems
-});
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-resultsMenu.setOnItemClick(function(e) {
-    console.log(JSON.stringify(e.item));
-    // { "title":"My Title 1","subtitle":"My Subtitle 1","data":{"info":"My Info 1"}}
-    console.log(e.itemIndex);
-    // 0
-});
+        // This is all you need for an already developed app
+        Intent serviceIntent = new Intent(this, StrapKitMessageService.class);
+        startService(serviceIntent);
+    }
 ```
-#### Set On Item Click
-```javascript
-myList.setOnItemClick(function(e) {
-    e.item // returns the item you clicked on containing title, subtitle and data
-    e.itemIndex // returns the index of the item you clicked on
-});
+4. Wear: Copy both "*-wear.aar" to your wear's /libs folder. In your build.gradle:
 ```
-### HttpClient
-HttpClient allows you to access API clients outside of the wearable app.
-#### Example
-```javascript
-StrapKit.HttpClient(
-  {
-    url:'http://api.openweathermap.org/data/2.5/forecast?q=London',
-    type:'json'
-  },
-  function(data) {
-    console.log(JSON.stringify(data));
-  },
-  function(error) {
-    console.log(error);
-  }
-);
+dependencies {
+    compile 'com.google.android.support:wearable:1.1.0'
+    compile 'com.google.android.gms:play-services-wearable:6.5.87'
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile(name: 'strapkit-wear', ext: 'aar')
+    compile(name: 'strapmetrics-wear', ext: 'aar')
+}
 ```
-#### Opts
-```javascript
-StrapKit.HttpClient({
-  // url: url to call
-  // method: 'POST', 'GET', 'UPDATE', etc
-  // data: { 'username': 'myUsername'}
-  // heaaders: { 'Authorization': 'Token: 0sdknweeksokdf0'}
-}, success, failure);
-```
-### Strap Metrics
-With StrapKit JS, adding Strap Metrics to your app is a breeze.
-#### Initialize
-Initializing Strap Metrics allows you to immediately get access to diagnostics and sensor data. You can then log events that are specific to your app.
-```javascript
-var app_id = "8djanek08sdjk";
-StrapKit.Metrics.init(app_id); // Metrics will start logging sensor data
+5. In your wear's Android Manifest file add the following launcher activity under the "application" tag:
+```xml
+        <activity
+            android:name="com.straphq.strapkit.framework.StrapKitSplashActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-// Log an event
-StrapKit.Metrics.logEvent("/myfirstevent/winning");
-
-// Log an event with data
-var myInfo = {info: "This was easy"};
-StrapKit.Metrics.logEvent("/myfirstevent/data", myInfo);
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 ```
+6. In both your mobile and wear Manifest files, you must have the same permissions with the minimum as follows:
+```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+```
+#### Deploy
+To test your app, [Android Wear docs](https://developer.android.com/training/wearables/apps/creating.html) are extremely useful for walking you through the steps.
