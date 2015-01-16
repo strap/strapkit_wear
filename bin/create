@@ -157,13 +157,13 @@ mkdir -p "$R/mobile"
 cp -r $PROJECT_TEMPLATE_DIR/mobile/{libs,.gitignore,build.gradle,mobile.iml} "$R/mobile/."
 mkdir -p "$R/mobile/src/main"
 cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/{assets,res,AndroidManifest.xml} "$R/mobile/src/main/."
-mkdir -p "$R/mobile/src/main/$PACKAGE_DIR"
-cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/java/com/straphq/teststrapkit/mysampleapp/* "$R/mobile/src/main/$PACKAGE_DIR"
+mkdir -p "$R/mobile/src/main/java/$PACKAGE_DIR"
+cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/java/com/straphq/teststrapkit/mysampleapp/* "$R/mobile/src/main/java/$PACKAGE_DIR"
 
 # Adjust package names in mobile module
 replace_package "$R/mobile/src/main/AndroidManifest.xml"
 replace_package "$R/mobile/build.gradle"
-replace_package "$R/mobile/src/main/$PACKAGE_DIR/BaseActivity.java"
+replace_package "$R/mobile/src/main/java/$PACKAGE_DIR/BaseActivity.java"
 
 # Adjust app name in wear module
 replace_name "$R/mobile/src/main/res/values/strings.xml"
