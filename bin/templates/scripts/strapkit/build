@@ -1,27 +1,22 @@
 #!/bin/bash
 
 CURRENT_DIR=$(cd "$( dirname "$0" )" && pwd -P)
+PROJECT_NAME=$( basename $(pwd -P))
 
-echo $CURRENT_DIR
-
-PROJECT_NAME=$( basename $( pwd -P ) )
-FILE_NAME="$1"
-
-SAMPLE_DIR=$CURRENT_DIR"/../$PROJECT_NAME"
-OUTPUT_DIR=$CURRENT_DIR"/../../../output/"
+SAMPLE_DIR="$CURRENT_DIR/../$PROJECT_NAME"
+OUTPUT_DIR="$CURRENT_DIR/../../../build/android-wear"
 
 mkdir -p $OUTPUT_DIR
-
-echo $SAMPLE_DIR
-echo $OUTPUT_DIR
 
 APP_FILE="$0"
 if [ "$1" == "" ];then
     APP_FILE="app.js"
 fi
 cp $CURRENT_DIR/../../../js/$APP_FILE $SAMPLE_DIR/mobile/src/main/assets/app.js
+mkdir -p $CURRENT_DIR/../libraries/assets/
+cp $CURRENT_DIR/../../../js/$APP_FILE $CURRENT_DIR/../libraries/assets/app.js
 cd $SAMPLE_DIR
 
 ./gradlew aR
-cp $SAMPLE_DIR/mobile/build/outputs/apk/mobile-release.apk $OUTPUT_DIR
-cp $SAMPLE_DIR/wear/build/outputs/apk/wear-release.apk $OUTPUT_DIR
+cp $SAMPLE_DIR/mobile/build/outputs/apk/mobile-release-unsigned.apk $OUTPUT_DIR/
+cp $SAMPLE_DIR/wear/build/outputs/apk/wear-release-unsigned.apk $OUTPUT_DIR/
