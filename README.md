@@ -23,7 +23,7 @@ And that't it!
 $ strapkit build android-wear
 ```
 #### Deploy
-This will install your the debug version of your app on your mobile and wear devices. Make sure they are either emulators or connected through USB to your computer.
+This will install the debug version of your app on your mobile and wear devices. Make sure they are either emulators or connected through USB to your computer.
 ```sh
 $ strapkit install android-wear
 ```
