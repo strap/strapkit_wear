@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">StrapKit JS</string>
+    <string name="title_activity_base">StrapKit JS</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="app_description">Welcome to your first StrapKit JS app! Open the app on your Android wear device to see how your awesome code turned out!\n\nTry sending a notification below.</string>
+    <string name="notification_text_hint">Send notification to wearable...</string>
+    <string name="notification_button_text">Send Notification</string>
+
+</resources>

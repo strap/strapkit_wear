@@ -1,19 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        strapkit {
-            keyAlias 'strapkit'
-            keyPassword 'strapkit'
-            storeFile file('../strapkit.jks')
-            storePassword 'strapkit'
-        }
-    }
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
+
     defaultConfig {
-        applicationId "com.straphq.strapkit.framework"
-        minSdkVersion 19
+        applicationId "com.straphq.teststrapkit.mysampleapp"
+        minSdkVersion 18
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -22,14 +15,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.strapkit
         }
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile project(':strapkit_lib')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile(name: 'strapkit_lib-mobile', ext: 'aar')
+    compile(name: 'strapmetrics-mobile', ext: 'aar')
 }
