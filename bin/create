@@ -28,6 +28,10 @@
 #
 set -e
 
+#
+# usage
+# Output usage information and exit
+#
 function usage (){
   echo "Usage:"
   echo "    $0 --nometrics <path_to_new_project> <package_name> <project_name> [<project_template_dir>]"
@@ -37,6 +41,30 @@ function usage (){
   echo "    $0 <project_name>: Project name"
   echo "    $0 <project_template_dir>: Path to project template (override)."
   exit 1
+}
+
+#
+# replace_package
+# Replaces all occurences of default package name with desired package name
+#
+# @param target_file
+#
+function replace_package (){
+    sed -e "s@com.straphq.teststrapkit.mysampleapp@$PACKAGE@g" "$1" > /tmp/out
+    cat /tmp/out >  "$1"
+    rm /tmp/out
+}
+
+#
+# replace_name
+# Replaces all occurences of default app name with desired app name
+#
+# @param target_file
+#
+function replace_name (){
+    sed -e "s@MySampleApp@$PROJECT_NAME@g" "$1" > /tmp/out
+    cat /tmp/out >  "$1"
+    rm /tmp/out
 }
 
 INCLUDE_METRICS=1
@@ -124,25 +152,35 @@ cp -r $PROJECT_TEMPLATE_DIR/{.idea,gradle,strapkit_lib,wear} "$R/."
 # Copy non-edited files
 cp -r $PROJECT_TEMPLATE_DIR/{build.gradle,framework.iml,gradle.properties,gradlew,gradlew.bat,local.properties,settings.gradle} "$R/."
 
-# Setup Wear
 # mkdir -p "$R/wear"
-# cp -r $PROJECT_TEMPLATE_DIR/wear/{libs,.gitignore,build.gradle,proguard-rules.pro,wear.iml} "$R/wear/."
+# cp -r $PROJECT_TEMPLATE_DIR/wear/{libs,.gitignore,build.gradle,wear.iml} "$R/wear/."
 # mkdir -p "$R/wear/src/main"
 # cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/{res,AndroidManifest.xml} "$R/wear/src/main/."
 # mkdir -p "$R/wear/src/main/$PACKAGE_DIR"
 # cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/java/com/straphq/strapkit/framework/* "$R/wear/src/main/$PACKAGE_DIR"
 
-sed -e "s@com.straphq.strapkit.framework@$PACKAGE@g" "$R/wear/src/main/AndroidManifest.xml" > /tmp/out
-cat /tmp/out >  "$R/wear/src/main/AndroidManifest.xml"
+# Adjust package names in wear module
+replace_package "$R/wear/src/main/AndroidManifest.xml"
+replace_package "$R/wear/build.gradle"
 
+# Adjust app name in wear module
+replace_name "$R/wear/src/main/res/values/strings.xml"
 
-# Setup Mobile
+# Setup Mobile directories
 mkdir -p "$R/mobile"
-cp -r $PROJECT_TEMPLATE_DIR/mobile/{libs,.gitignore,build.gradle,proguard-rules.pro,mobile.iml} "$R/mobile/."
+cp -r $PROJECT_TEMPLATE_DIR/mobile/{libs,.gitignore,build.gradle,mobile.iml} "$R/mobile/."
 mkdir -p "$R/mobile/src/main"
 cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/{assets,res,AndroidManifest.xml} "$R/mobile/src/main/."
 mkdir -p "$R/mobile/src/main/$PACKAGE_DIR"
 cp -r $PROJECT_TEMPLATE_DIR/mobile/src/main/java/com/straphq/teststrapkit/mysampleapp/* "$R/mobile/src/main/$PACKAGE_DIR"
+
+# Adjust package names in mobile module
+replace_package "$R/mobile/src/main/AndroidManifest.xml"
+replace_package "$R/mobile/build.gradle"
+replace_package "$R/mobile/src/main/$PACKAGE_DIR/BaseActivity.java"
+
+# Adjust app name in wear module
+replace_name "$R/mobile/src/main/res/values/strings.xml"
 
 echo "BINDIR $BINDIR"
 echo "PROJECT_PATH $PROJECT_PATH"
