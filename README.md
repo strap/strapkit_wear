@@ -1,11 +1,15 @@
 # Strap Kit JS Android Wear
- 
+
 ## Version
-0.0.1
+0.2.0
 
 ## License
 
 See [LICENSE](LICENSE)
+
+## Dependencies
+
+See [README-Dependencies.md](README-Dependencies.md)
 
 ## Create your Android Wear app from Strap Kit JS
 
@@ -42,14 +46,14 @@ dependencies {
 #### Add Strap Kit JS to your App
 
 
-First you need to generate the necessary files from your root directory: 
+First you need to generate the necessary files from your root directory:
 ```sh
 $ strapkit platform add android-wear
 $ cd platforms/android-wear/libraries
 ```
 In the libraries folder, you will see 4 aar files and an assets folder which need to be copied.
 1. Copy the contents of the assets folder into your mobile apps "assets" folder.
-2. Mobile: Copy both "*-mobile.aar" files into your mobile's /libs directory. In your build.gradle: 
+2. Mobile: Copy both "*-mobile.aar" files into your mobile's /libs directory. In your build.gradle:
 ```
 repositories {
     flatDir {
@@ -67,7 +71,7 @@ dependencies {
 3. Mobile: Add into your Application or Launch Activity:
 ```java
     import com.straphq.strapkit.strapkit_lib.messaging.StrapKitMessageService;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +91,7 @@ dependencies {
     compile(name: 'strapmetrics-wear', ext: 'aar')
 }
 ```
-5. In your wear's Android Manifest file add the following launcher activity under the "application" tag: 
+5. In your wear's Android Manifest file add the following launcher activity under the "application" tag:
 ```xml
         <activity
             android:name="com.straphq.strapkit.framework.StrapKitSplashActivity"
@@ -99,7 +103,7 @@ dependencies {
             </intent-filter>
         </activity>
 ```
-6. In both your mobile and wear Manifest files, you must have the same permissions with the minimum as follows: 
+6. In both your mobile and wear Manifest files, you must have the same permissions with the minimum as follows:
 ```xml
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
