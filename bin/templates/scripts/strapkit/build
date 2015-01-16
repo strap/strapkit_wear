@@ -1,18 +1,12 @@
 #!/bin/bash
 
 CURRENT_DIR=$(cd "$( dirname "$0" )" && pwd -P)
-
-echo $CURRENT_DIR
-
-PROJECT_NAME=$( basename $( pwd -P ) )
+PROJECT_NAME=$( basename $(pwd -P))
 
 SAMPLE_DIR="$CURRENT_DIR/../$PROJECT_NAME"
 OUTPUT_DIR="$CURRENT_DIR/../../../build/android-wear"
 
 mkdir -p $OUTPUT_DIR
-
-echo $SAMPLE_DIR
-echo $OUTPUT_DIR
 
 APP_FILE="$0"
 if [ "$1" == "" ];then
