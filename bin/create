@@ -89,6 +89,13 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+# Say what's up
+echo
+echo "Adding android-wear"
+echo "path: $PROJECT_PATH"
+echo "package: $PACKAGE"
+echo "name: $PROJECT_NAME"
+
 # check whether it is a proper create command (at least 3 arguments)
 if [[ -z "$PROJECT_NAME" ]]; then
    usage
@@ -103,12 +110,10 @@ done
 
 # Capture location of script
 BINDIR=$( cd "$( dirname "$SCRIPT" )" && pwd )
-
 PROJECT_PARENT=$(dirname "$PROJECT_PATH")
 PROJECT_TEMPLATE_DIR=${PROJECT_TEMPLATE_DIR:-"$BINDIR/templates/framework"}
 SCRIPT_TEMPLATE_DIR=$BINDIR/templates/scripts
 PACKAGE_DIR=$(echo $PACKAGE | sed 's/\./\//g' )
-
 
 # check whether the project path exists and is not empty
 if [ -d "$PROJECT_PATH" ]; then
@@ -118,46 +123,27 @@ if [ -d "$PROJECT_PATH" ]; then
 	   fi
 fi
 
-#Ensure the parent directory exists so cp -r will not fail
+# Ensure the parent directory exists so cp -r will not fail
 if [ ! -d "$PROJECT_PARENT" ]; then
    echo "\033[31mError: $PROJECT_PARENT does not exist. Please specify an existing parent folder.\033[m"
    exit 1
 fi
 
+# Setup project path
 mkdir -p "$PROJECT_PATH"
-
-# if [ $INCLUDE_METRICS == 1 ]; then
-#cp -r "$PROJECT_TEMPLATE_DIR/__PROJECT_NAME__SM" "$PROJECT_PATH/$PROJECT_NAME"
-# else
-# cp -r "$PROJECT_TEMPLATE_DIR/__PROJECT_NAME__PEBBLEJS" "$PROJECT_PATH/$PROJECT_NAME"
-# fi
-
-
 R=$PROJECT_PATH/$PROJECT_NAME
-# mv "$R/src/__PROJECT_NAME__PEBBLEJS.c" "$R/src/$PROJECT_NAME.c"
-
-#"$BINDIR/replaces" "$R/appinfo.json"     __PROJECT_NAME__PEBBLEJS "$PROJECT_NAME"
-#"$BINDIR/replaces" "$R/appinfo.json"     __UUID__ `uuidgen`
 
 # Copy strapkit scripts
 cp -r "$SCRIPT_TEMPLATE_DIR"/* "$PROJECT_PATH/"
 
 # Create project directory
 mkdir $R
-# cp -r "$PROJECT_TEMPLATE_DIR"/* $R
 
 # Copy non-edited directories
 cp -r $PROJECT_TEMPLATE_DIR/{.idea,gradle,strapkit_lib,wear} "$R/."
 
 # Copy non-edited files
-cp -r $PROJECT_TEMPLATE_DIR/{build.gradle,framework.iml,gradle.properties,gradlew,gradlew.bat,local.properties,settings.gradle} "$R/."
-
-# mkdir -p "$R/wear"
-# cp -r $PROJECT_TEMPLATE_DIR/wear/{libs,.gitignore,build.gradle,wear.iml} "$R/wear/."
-# mkdir -p "$R/wear/src/main"
-# cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/{res,AndroidManifest.xml} "$R/wear/src/main/."
-# mkdir -p "$R/wear/src/main/$PACKAGE_DIR"
-# cp -r $PROJECT_TEMPLATE_DIR/wear/src/main/java/com/straphq/strapkit/framework/* "$R/wear/src/main/$PACKAGE_DIR"
+cp -r $PROJECT_TEMPLATE_DIR/{build.gradle,framework.iml,gradle.properties,gradlew,gradlew.bat,settings.gradle} "$R/."
 
 # Adjust package names in wear module
 replace_package "$R/wear/src/main/AndroidManifest.xml"
@@ -182,9 +168,5 @@ replace_package "$R/mobile/src/main/$PACKAGE_DIR/BaseActivity.java"
 # Adjust app name in wear module
 replace_name "$R/mobile/src/main/res/values/strings.xml"
 
-echo "BINDIR $BINDIR"
-echo "PROJECT_PATH $PROJECT_PATH"
-echo "PROJECT_PARENT $PROJECT_PARENT"
-echo "PROJECT_TEMPLATE_DIR $PROJECT_TEMPLATE_DIR"
-echo "SCRIPT_TEMPLATE_DIR $SCRIPT_TEMPLATE_DIR"
-echo "R $R"
+echo
+echo "Done!"
