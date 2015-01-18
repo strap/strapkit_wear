@@ -51,13 +51,7 @@ var AndroidPage = Page.extend({
 });
 
 var httpClient = function(opts, success, error) {
-	if (success != null) {
-		success = success.toString();
-	}
-	if (error != null) {
-		error = error.toString();
-	}
-	window.strapkit_bridge.httpClient(stringify(opts), success, error);
+	ajax(opts, success, error);
 };
 
 var convertJavaObject = function(data) {
