@@ -32,6 +32,7 @@ var AndroidPage = Page.extend({
 	},
 	show: function() {
 		this.pageOpen = true;
+		this.setId(getPageIndex);
 		var viewString = [];
 		for (var i = 0; i < this.getViews().length; i++) {
 			var view = this.getViews()[i];
@@ -46,9 +47,15 @@ var AndroidPage = Page.extend({
 	},
 	hide: function() {
 		this.pageOpen = false;
-		window.strapkit_bridge.hidePage(this);
+		window.strapkit_bridge.hidePage(this.getId());
 	}
 });
+
+var index = 1;
+
+var getPageIndex = function() {
+	return index++;
+};
 
 var httpClient = function(opts, success, error) {
 	ajax(opts, success, error);
