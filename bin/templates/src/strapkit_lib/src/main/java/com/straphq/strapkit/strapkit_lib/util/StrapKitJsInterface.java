@@ -103,6 +103,12 @@ public class StrapKitJsInterface {
     }
 
     @JavascriptInterface
+    public void hidePage(String pageId) {
+        Log.d(TAG, "page Id: " + pageId);
+        mService.sendMessage(StrapKitConstants.ACTION_HIDE_PAGE, pageId);
+    }
+
+    @JavascriptInterface
     public void httpClient(String options, String success, String failure) {
         Gson gson = new Gson();
 

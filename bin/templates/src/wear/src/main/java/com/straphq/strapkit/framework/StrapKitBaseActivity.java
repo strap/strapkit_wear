@@ -27,8 +27,11 @@ public class StrapKitBaseActivity extends Activity implements GoogleApiClient.Co
 
     public static final String ARGS_VIEW_DEFINITIONS = "args_view_definitions";
     public static final String ARGS_BACKGROUND_COLOR = "args_background_color";
+    public static final String ARGS_ID = "args_id";
 
     private GoogleApiClient mGoogleApiClient;
+
+    public Integer pageId;
 
     private Handler mHandler = new Handler();
 
@@ -58,6 +61,10 @@ public class StrapKitBaseActivity extends Activity implements GoogleApiClient.Co
             View view = findViewById(R.id.base_view);
             view.setBackgroundColor(Color.parseColor(backgroundColor));
         }
+
+        pageId = getIntent().getIntExtra(ARGS_ID, -1);
+
+        ((StrapKitApplication) getApplication()).storeActivityInCache(this);
     }
 
     public void sendMessage(final String path, final String message) {
