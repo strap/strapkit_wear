@@ -103,6 +103,12 @@ public class StrapKitJsInterface {
     }
 
     @JavascriptInterface
+    public void hidePage(String pageId) {
+        Log.d(TAG, "page Id: " + pageId);
+        mService.sendMessage(StrapKitConstants.ACTION_HIDE_PAGE, pageId);
+    }
+
+    @JavascriptInterface
     public void httpClient(String options, String success, String failure) {
         Gson gson = new Gson();
 
@@ -161,11 +167,11 @@ public class StrapKitJsInterface {
             public void run() {
                 try {
                     if (!StrapKitJsInterface.this.loaded) return;
-                    String javascriptNoComments = javascript.replaceAll("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/|[ \\t]*//.*)", "");
+                    String javascriptNoComments = javascript;
                     String javascriptFunction = "javascript:var myMethod = " + javascriptNoComments + ";";
                     if (info != null) {
                         try {
-                            String cleanedArgs = info.replace("\\\"", "\"");
+                            String cleanedArgs = info.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)","");
                             JSONObject object = new JSONObject(cleanedArgs);
                             javascriptFunction = "javascript: var data = JSON.parse('" + object.toString() + "'); \n(" + javascriptNoComments + ")(data);";
                         } catch (Exception o) {

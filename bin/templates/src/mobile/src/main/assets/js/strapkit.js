@@ -23,8 +23,8 @@ var stringify = function(obj) {
 var AndroidPage = Page.extend({
 	id: -1,
 	setId: function(idx) {
-		if (this.id == null) {
-			this.id = idx;
+		if (this.id == -1) {
+			this.id = getPageIndex();
 		}
 	},
 	getId: function() {
@@ -32,6 +32,7 @@ var AndroidPage = Page.extend({
 	},
 	show: function() {
 		this.pageOpen = true;
+		this.setId(getPageIndex);
 		var viewString = [];
 		for (var i = 0; i < this.getViews().length; i++) {
 			var view = this.getViews()[i];
@@ -40,24 +41,25 @@ var AndroidPage = Page.extend({
 		var json = {
 			views: viewString,
 			pageOpen: this.pageOpen,
-			backgroundColor: this.backgroundColor
+			backgroundColor: this.backgroundColor,
+			id: this.getId()
 		};	
 		window.strapkit_bridge.showPage(stringify(json));
 	},
 	hide: function() {
 		this.pageOpen = false;
-		window.strapkit_bridge.hidePage(this);
+		window.strapkit_bridge.hidePage(this.getId());
 	}
 });
 
+var index = 1;
+
+var getPageIndex = function() {
+	return index++;
+};
+
 var httpClient = function(opts, success, error) {
-	if (success != null) {
-		success = success.toString();
-	}
-	if (error != null) {
-		error = error.toString();
-	}
-	window.strapkit_bridge.httpClient(stringify(opts), success, error);
+	ajax(opts, success, error);
 };
 
 var convertJavaObject = function(data) {

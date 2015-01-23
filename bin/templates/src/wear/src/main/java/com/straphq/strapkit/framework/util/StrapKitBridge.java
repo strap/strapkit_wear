@@ -42,9 +42,21 @@ public class StrapKitBridge {
                     Log.d(TAG, "Failed to parse json: " + json, e);
                 }
                 break;
+            case StrapKitConstants.ACTION_HIDE_PAGE:
+                try {
+                    hidePage(context, json);
+                } catch (Exception e) {
+                    Log.d(TAG, "Failed to hidePage: " + json, e);
+                }
             default:
                 break;
         }
+    }
+
+    private static void hidePage(Context context, String pageIdString) {
+        Integer pageId = Integer.parseInt(pageIdString);
+
+        ((StrapKitApplication) context.getApplicationContext()).hidePage(pageId);
     }
 
 
@@ -86,9 +98,11 @@ public class StrapKitBridge {
         if (backgroundColor.equals("null")) {
             backgroundColor = null;
         }
+        Integer pageId = jsonObject.getInt("id");
         Intent intent = new Intent(context, StrapKitBaseActivity.class);
         intent.putExtra(StrapKitBaseActivity.ARGS_VIEW_DEFINITIONS, activityViews);
         intent.putExtra(StrapKitBaseActivity.ARGS_BACKGROUND_COLOR, backgroundColor);
+        intent.putExtra(StrapKitBaseActivity.ARGS_ID, pageId);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ((StrapKitApplication) context.getApplicationContext()).launchNewActivity(intent);
     }

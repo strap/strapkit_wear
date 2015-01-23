@@ -10,4 +10,5 @@ public class StrapKitConstants {
     public static final String ACTION_INITIALIZE_SENSOR_DATA = "/sensor_data";
     public static final String ACTION_HTTP_CLIENT = "/http";
     public static final String ACTION_START_UI = "/start_app";
+    public static final String ACTION_HIDE_PAGE = "/hide_page";
 }
