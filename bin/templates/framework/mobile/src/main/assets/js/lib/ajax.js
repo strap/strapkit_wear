@@ -126,3 +126,5 @@ if (typeof module !== 'undefined') {
 return ajax;
 
 })();
+
+module.exports = ajax;
