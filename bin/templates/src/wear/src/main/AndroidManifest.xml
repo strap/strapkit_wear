@@ -11,9 +11,6 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:name="com.straphq.strapkit.framework.StrapKitApplication">
-        <activity
-            android:name=".StrapKitBaseActivity">
-        </activity>
 
         <service android:name=".messaging.StrapKitWearListener" >
             <intent-filter>

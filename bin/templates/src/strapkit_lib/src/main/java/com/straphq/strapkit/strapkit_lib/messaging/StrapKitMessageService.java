@@ -2,7 +2,6 @@ package com.straphq.strapkit.strapkit_lib.messaging;
 
 import android.app.Service;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,15 +20,12 @@ import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.straphq.strapkit.strapkit_lib.util.StrapKitConstants;
+import com.straphq.strapkit.strapkit_lib.util.StrapKitExecData;
 import com.straphq.strapkit.strapkit_lib.util.StrapKitJsInterface;
-import com.straphq.wear_sdk.StrapMetrics;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.List;
 
 public class StrapKitMessageService extends Service implements DataApi.DataListener, MessageApi.MessageListener,
@@ -97,26 +93,8 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
             public void run() {
                 mJsInterface = new StrapKitJsInterface(StrapKitMessageService.this);
                 mJsInterface.startWebView();
-            }
-        });
-    }
 
-    public void sendMessage(final String path, final String message) {
-        Log.d(TAG, "Sending message: " + path + ", " + message);
-        Log.d(TAG, "Google Api Client: " + mGoogleApiClient.isConnected());
-        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
-            @Override
-            public void onResult(NodeApi.GetConnectedNodesResult nodesResult) {
-                List<Node> nodes = nodesResult.getNodes();
-                Log.d(TAG, "node size: " + nodes.size());
-                for (Node node : nodes) {
-                    Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, message.getBytes() ).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
-                        @Override
-                        public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-                            Log.d(TAG, "Received message result" + sendMessageResult.getRequestId());
-                        }
-                    });
-                }
+                sendMessage("/start_app", "");
             }
         });
     }
@@ -153,39 +131,44 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
             DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
             DataMap map = dataMapItem.getDataMap();
 
-            //can strap can handle the data map? If so, strap should handle the event
-            if (mStrapMetrics != null && mStrapMetrics.canHandleMsg(event)) {
-                // Log.d("DataEvent","Received new strapmetrics event!! " + map.toString());
-                try {
-                    mStrapMetrics.processReceiveData(map);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+
         }
         // must call release() here to prevent dataEvents from growing too large.
         dataEvents.release();
     }
 
-    @Override
-    public void onMessageReceived(final MessageEvent messageEvent) {
+    public void sendData(String path, StrapKitExecData execData) {
+        PutDataMapRequest dataMapRequest = PutDataMapRequest.create(path);
+        execData.setDataMap(dataMapRequest.getDataMap());
+        PutDataRequest request = dataMapRequest.asPutDataRequest();
+        Wearable.DataApi.putDataItem(mGoogleApiClient, request);
+    }
 
-        Log.d(TAG, "message received: " + messageEvent.getPath());
-        if (messageEvent.getPath().equals(StrapKitConstants.ACTION_START_UI)) {
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        if (messageEvent.getPath().equals("/start_app")) {
             initializeJs();
-        } else if (messageEvent.getPath().equals("/onClick")) {
-            mJsInterface.evaluateJs(new String(messageEvent.getData()));
-        } else if (messageEvent.getPath().equals("/onItemClick")) {
-            Log.d(TAG, "message: " + new String(messageEvent.getData()));
-            try {
-                JSONObject object = new JSONObject(new String(messageEvent.getData()));
-                mJsInterface.evaluateJs(object.getString("function"), object.getString("args"));
-            } catch (Exception e) {
-                Log.d(TAG, "Exception", e);
-            }
         }
+    }
+
+    public void sendMessage(final String path, final String message) {
+        Log.d(TAG, "Sending message: " + path + ", " + message);
+        Log.d(TAG, "Google Api Client: " + mGoogleApiClient.isConnected());
+        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+            @Override
+            public void onResult(NodeApi.GetConnectedNodesResult nodesResult) {
+                List<Node> nodes = nodesResult.getNodes();
+                Log.d(TAG, "node size: " + nodes.size());
+                for (Node node : nodes) {
+                    Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, message.getBytes() ).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+                        @Override
+                        public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                            Log.d(TAG, "Received message result" + sendMessageResult.getRequestId());
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
@@ -195,18 +178,5 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
             // The Android Wear app is not installed... we need to alert the app
             Log.d(TAG, "Wear api is not available");
         }
-    }
-
-    private boolean mStrapMetricsInitialized = false;
-    private StrapMetrics mStrapMetrics;
-
-    public void initializeStrapMetrics(String app_id) {
-
-        mStrapMetrics = new StrapMetrics();
-
-        sendMessage(StrapKitConstants.ACTION_INITIALIZE_SENSOR_DATA, app_id);
-
-        mStrapMetricsInitialized = true;
-
     }
 }

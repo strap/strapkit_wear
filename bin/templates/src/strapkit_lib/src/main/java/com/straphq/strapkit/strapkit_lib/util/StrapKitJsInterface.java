@@ -23,8 +23,6 @@ public class StrapKitJsInterface {
     WebView mWebView;
     private Handler handler = new Handler();
 
-    boolean metricsEnabled = false;
-
     private static final String TAG = StrapKitJsInterface.class.getSimpleName();
     private boolean loaded = false;
 
@@ -41,12 +39,9 @@ public class StrapKitJsInterface {
         settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
 
         //We don't save any form data in the application
         settings.setSaveFormData(false);
-        settings.setSavePassword(false);
-
 
         // Enable DOM storage
         settings.setDomStorageEnabled(true);
@@ -56,14 +51,10 @@ public class StrapKitJsInterface {
 
         // Enable AppCache
         // Fix for CB-2282
-        settings.setAppCacheMaxSize(5 * 1048576);
         settings.setAppCacheEnabled(true);
 
         settings.setAllowFileAccessFromFileURLs(true);
 
-        // Fix for CB-1405
-        // Google issue 4641
-        WebView.setWebContentsDebuggingEnabled(true);
         settings.getUserAgentString();
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
@@ -72,76 +63,13 @@ public class StrapKitJsInterface {
         init();
     }
 
-    @JavascriptInterface
-    public void initMetrics(String app_id) {
-        mService.initializeStrapMetrics(app_id);
-    }
 
     @JavascriptInterface
-    public void logEvent(String event, String data) {
-        JsonObject object = new JsonObject();
-        object.addProperty("event", event);
-        if (data.equals("undefined")) {
-            data = null;
-            object.addProperty("data", data);
-        } else {
-            JsonParser parser = new JsonParser();
-            object.add("data", parser.parse(data));
-        }
-        mService.sendMessage(StrapKitConstants.ACTION_LOG_EVENT, object.toString());
-    }
-
-    @JavascriptInterface
-    public void showPage(String json) {
-        try {
-            mService.sendMessage(StrapKitConstants.ACTION_SHOW_PAGE, json);
-            Log.d(TAG, "show Page: " + json);
-        } catch (Exception e) {
-            Log.d(TAG, "failed to parse", e);
-
-        }
-    }
-
-    @JavascriptInterface
-    public void hidePage(String pageId) {
-        Log.d(TAG, "page Id: " + pageId);
-        mService.sendMessage(StrapKitConstants.ACTION_HIDE_PAGE, pageId);
-    }
-
-    @JavascriptInterface
-    public void httpClient(String options, String success, String failure) {
-        Gson gson = new Gson();
-
-        HttpClient httpClient = gson.fromJson(options, HttpClient.class);
-
-        httpClient.setSuccess(success);
-        httpClient.setFailure(failure);
-
-        httpClient.processHTTPCall(new HttpClient.HttpClientCallback() {
-            @Override
-            public void OnHttpComplete(String callback, String info) {
-                evaluateJs(callback, info);
-            }
-
-        });
-    }
-
-    @JavascriptInterface
-    public JSONObject getJavaJSONObject(String data) {
-
-        try {
-            JSONObject object = new JSONObject(data);
-
-            return object;
-        } catch (Exception e) {
-            Log.d(TAG, "Failed", e);
-            return null;
-        }
-
-    }
-
-    public void log(String msg) {
-        Log.d("Strapkit", msg);
+    public String exec(String service, String action, String callbackId, String argsJson) {
+        Log.d(TAG, "service: " + service + ", action: " + action + ", callbackId: " + callbackId + ", argsJson: " + argsJson);
+        StrapKitExecData data = new StrapKitExecData(service, action, callbackId, argsJson);
+        mService.sendData("/exec", data);
+        return null;
     }
 
     public void init() {
@@ -150,9 +78,6 @@ public class StrapKitJsInterface {
             public void run() {
                 mWebView.loadUrl("file:///android_asset/index.html");
                 StrapKitJsInterface.this.loaded = true;
-                // String html = "<html><script type=\"text/javascript\" src=\"file:///android_asset/js/lib/klass.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/page.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/view.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/card.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/httpClient.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/list.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/modules/text.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/js/strapkit.js\"></script><script type=\"text/javascript\" src=\"file:///android_asset/app.js\"></script><body></body></html>";
-                // mWebView.loadDataWithBaseURL("file:////android_asset/", html, "text/html", "utf-8", "");
-                //mWebView.loadUrl("javascript:strapkit.init()");
             }
         });
     }

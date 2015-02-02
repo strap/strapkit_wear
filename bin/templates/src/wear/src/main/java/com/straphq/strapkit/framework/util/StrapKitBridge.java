@@ -2,9 +2,9 @@ package com.straphq.strapkit.framework.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.wearable.DataMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -12,16 +12,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.straphq.strapkit.framework.StrapKitApplication;
-import com.straphq.strapkit.framework.StrapKitBaseActivity;
-import com.straphq.strapkit.framework.view.StrapKitBaseView;
-import com.straphq.strapkit.framework.view.StrapKitCardFragment;
-import com.straphq.strapkit.framework.view.StrapKitListView;
-import com.straphq.strapkit.framework.view.StrapKitTextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 /**
@@ -31,79 +27,43 @@ public class StrapKitBridge {
 
     private static final String TAG = StrapKitBridge.class.getSimpleName();
 
+    public static StrapKitApplication getApplication(Context context) {
+        return (StrapKitApplication) context.getApplicationContext();
+    }
 
-    public static void handleMessage(Context context, String path, String json) {
-        Log.d(TAG, "path: " + path + ", json: " + json);
+    public static void handleMessage(Context context, String path, DataMap dataMap) {
+        Log.d(TAG, "path: " + path);
         switch (path){
-            case StrapKitConstants.ACTION_SHOW_PAGE:
-                try {
-                    showPage(context, json);
-                } catch (Exception e) {
-                    Log.d(TAG, "Failed to parse json: " + json, e);
-                }
+            case "exec":
+                executeService(context, dataMap);
                 break;
-            case StrapKitConstants.ACTION_HIDE_PAGE:
-                try {
-                    hidePage(context, json);
-                } catch (Exception e) {
-                    Log.d(TAG, "Failed to hidePage: " + json, e);
-                }
             default:
                 break;
         }
     }
 
-    private static void hidePage(Context context, String pageIdString) {
-        Integer pageId = Integer.parseInt(pageIdString);
+    private static void executeService(Context context, DataMap dataMap) {
+        Log.d(TAG, "service: " + dataMap.getString("service"));
 
-        ((StrapKitApplication) context.getApplicationContext()).hidePage(pageId);
-    }
+        String packageInfo = getApplication(context).getPluginManager().getPackageInfo(dataMap.getString("service"));
 
+        Log.d(TAG, "packageInfo: " + packageInfo);
 
-    public static void showPage(Context context, String json) throws JSONException {
+        try {
+            Class<?> pluginClass = Class.forName(packageInfo);
+            Method method = pluginClass.getMethod("exec", String.class, String.class, Integer.class);
+            method.invoke(pluginClass, dataMap.getString("action"), dataMap.getString("argsJson"), dataMap.getInt("callbackId"));
 
-        JsonParser parser = new JsonParser();
-        JsonArray array = parser.parse(json).getAsJsonObject().getAsJsonArray("views");
-
-        Gson gson = new Gson();
-        ArrayList<StrapKitBaseView> activityViews = new ArrayList<>();
-        for (JsonElement element : array) {
-            JsonObject object = element.getAsJsonObject();
-            switch (object.get("type").getAsString()) {
-                case "card":
-                    Log.d(TAG, "element: " + element.toString());
-                    StrapKitCardFragment cardFragment = gson.fromJson(object, StrapKitCardFragment.class);
-                    activityViews.add(cardFragment);
-                    break;
-                case "text":
-                    Log.d(TAG, "element: " + element.toString());
-                    StrapKitTextView textView = gson.fromJson(object, StrapKitTextView.class);
-                    activityViews.add(textView);
-                    break;
-                case "listView":
-                    Log.d(TAG, "element: " + element.toString());
-                    gson = new GsonBuilder()
-                            .registerTypeAdapter(StrapKitListView.WearableItem.class, new StrapKitListView.Desirializer()).create();
-                    StrapKitListView listView = gson.fromJson(object, StrapKitListView.class);
-                    activityViews.add(listView);
-                    break;
-                default:
-                    Log.d(TAG, "Object not supported: " + object.get("type").getAsString());
-                    break;
-            }
+        } catch (ClassNotFoundException e) {
+            Log.d(TAG, "No Plugin is found for: " + packageInfo, e);
+        } catch (NoSuchMethodException e) {
+            Log.d(TAG, "No method seen for exec(String, String, Int)", e);
+        } catch (InvocationTargetException e) {
+            Log.d(TAG, "Failed to invoke method: exec", e);
+        } catch (IllegalAccessException e) {
+            Log.d(TAG, "Cannot access exec", e);
         }
 
-        JSONObject jsonObject = new JSONObject(json);
-        String backgroundColor = jsonObject.getString("backgroundColor");
-        if (backgroundColor.equals("null")) {
-            backgroundColor = null;
-        }
-        Integer pageId = jsonObject.getInt("id");
-        Intent intent = new Intent(context, StrapKitBaseActivity.class);
-        intent.putExtra(StrapKitBaseActivity.ARGS_VIEW_DEFINITIONS, activityViews);
-        intent.putExtra(StrapKitBaseActivity.ARGS_BACKGROUND_COLOR, backgroundColor);
-        intent.putExtra(StrapKitBaseActivity.ARGS_ID, pageId);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((StrapKitApplication) context.getApplicationContext()).launchNewActivity(intent);
+
     }
 }

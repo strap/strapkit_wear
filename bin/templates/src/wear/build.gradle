@@ -25,6 +25,14 @@ android {
             signingConfig signingConfigs.strapkit
         }
     }
+
+    libraryVariants.all { variant ->
+        variant.outputs.each { output ->
+            def newApkName
+            newApkName = "strapkit-wear.aar";
+            output.outputFile = new File("${project.rootDir}/../framework/wear/libs/", newApkName);
+        }
+    }
 }
 
 dependencies {
@@ -33,5 +41,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.google.code.gson:gson:2.2.+'
-    compile(name: 'wear', ext: 'aar')
 }
