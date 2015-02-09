@@ -36,6 +36,7 @@ public class BaseActivity extends ActionBarActivity {
         mNotificationText = (EditText) findViewById(R.id.notification_edit_text);
         mSendNotification = (Button) findViewById(R.id.notification_button);
 
+
         mSendNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

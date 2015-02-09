@@ -17,9 +17,12 @@ import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.straphq.strapkit.framework.StrapKitSplashActivity;
+import com.straphq.strapkit.framework.util.PluginResult;
 import com.straphq.strapkit.framework.util.StrapKitBridge;
 
 import java.util.List;
@@ -33,9 +36,10 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
 
     private GoogleApiClient mGoogleApiClient;
 
-    public static final String RECEIVER_ON_CLICK = "com.straphq.strapkit.framework.messaging.RECEIVER_ON_CLICK";
+    public static final String RECEIVER_CALLBACK = "com.straphq.strapkit.framework.messaging.RECEIVER_CALLBACK";
 
-    public static final String ARG_ON_CLICK_FUNCTION = "on_click_function";
+    public static final String PLUGIN_RESULT = "plugin_result";
+    public static final String CALLBACK_ID = "callback_id";
 
     @Override
     public void onCreate() {
@@ -51,8 +55,8 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
         registerReceiver(startAppReceiver, filter);
 
         IntentFilter intentFilter = new IntentFilter();
-        filter.addAction(RECEIVER_ON_CLICK);
-        registerReceiver(onClickReceiver, intentFilter);
+        intentFilter.addAction(RECEIVER_CALLBACK);
+        registerReceiver(onCabllackReceiver, intentFilter);
     }
 
     @Override
@@ -61,7 +65,7 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
         Log.d(TAG, "onDestroy");
         mGoogleApiClient.disconnect();
         unregisterReceiver(startAppReceiver);
-        unregisterReceiver(onClickReceiver);
+        unregisterReceiver(onCabllackReceiver);
     }
 
     @Override
@@ -119,12 +123,17 @@ public class StrapKitWearListener extends WearableListenerService implements Goo
         }
     };
 
-    private BroadcastReceiver onClickReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver onCabllackReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "receieved on Click ");
-            String function = intent.getStringExtra(ARG_ON_CLICK_FUNCTION);
-            //sendMessage("/onClick", function);
+            Log.d(TAG, "receieved a callback ");
+            PluginResult pluginResult = (PluginResult) intent.getSerializableExtra(PLUGIN_RESULT);
+            String callbackId = intent.getStringExtra(CALLBACK_ID);
+
+            PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/callback");
+            pluginResult.setDataMap(callbackId, dataMapRequest.getDataMap());
+            PutDataRequest request = dataMapRequest.asPutDataRequest();
+            Wearable.DataApi.putDataItem(mGoogleApiClient, request);
         }
     };
 

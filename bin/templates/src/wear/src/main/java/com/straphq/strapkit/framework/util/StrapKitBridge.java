@@ -45,24 +45,7 @@ public class StrapKitBridge {
     private static void executeService(Context context, DataMap dataMap) {
         Log.d(TAG, "service: " + dataMap.getString("service"));
 
-        String packageInfo = getApplication(context).getPluginManager().getPackageInfo(dataMap.getString("service"));
-
-        Log.d(TAG, "packageInfo: " + packageInfo);
-
-        try {
-            Class<?> pluginClass = Class.forName(packageInfo);
-            Method method = pluginClass.getMethod("exec", String.class, String.class, Integer.class);
-            method.invoke(pluginClass, dataMap.getString("action"), dataMap.getString("argsJson"), dataMap.getInt("callbackId"));
-
-        } catch (ClassNotFoundException e) {
-            Log.d(TAG, "No Plugin is found for: " + packageInfo, e);
-        } catch (NoSuchMethodException e) {
-            Log.d(TAG, "No method seen for exec(String, String, Int)", e);
-        } catch (InvocationTargetException e) {
-            Log.d(TAG, "Failed to invoke method: exec", e);
-        } catch (IllegalAccessException e) {
-            Log.d(TAG, "Cannot access exec", e);
-        }
+        getApplication(context).getPluginManager().exec(dataMap.getString("service"), dataMap.getString("action"), dataMap.getString("callbackId"), dataMap.getString("argsJson"));
 
 
     }

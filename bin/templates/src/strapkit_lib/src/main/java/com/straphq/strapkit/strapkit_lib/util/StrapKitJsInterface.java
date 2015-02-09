@@ -6,6 +6,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.google.android.gms.wearable.DataMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -82,41 +83,25 @@ public class StrapKitJsInterface {
         });
     }
 
-    public void evaluateJs(final String javascript) {
-        evaluateJs(javascript, null);
-    }
+    public void sendCallback(DataMap map) {
 
-    public void evaluateJs(final String javascript, final String info) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("javascript:window.callbacks.callbackFromNative(");
+        sb.append("'" + map.getString("callbackId") + "', ");
+        if (map.getInt("status") == 1) {
+            sb.append("true, ");
+        } else {
+            sb.append("false, ");
+        }
+        sb.append(map.getInt("status") + ", ");
+        sb.append("'" + map.getString("message") + "', ");
+        sb.append("true);");
+
         handler.post(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (!StrapKitJsInterface.this.loaded) return;
-                    String javascriptNoComments = javascript;
-                    String javascriptFunction = "javascript:var myMethod = " + javascriptNoComments + ";";
-                    if (info != null) {
-                        try {
-                            String cleanedArgs = info.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)","");
-                            JSONObject object = new JSONObject(cleanedArgs);
-                            javascriptFunction = "javascript: var data = JSON.parse('" + object.toString() + "'); \n(" + javascriptNoComments + ")(data);";
-                        } catch (Exception o) {
-                            Log.d(TAG, "not an object");
-                            try {
-                                JSONArray array = new JSONArray(info);
-                                javascriptFunction = "javascript: var data = JSON.parse('" + array.toString() + "'); \n(" + javascriptNoComments + ")(data);";
-                            } catch (Exception a) {
-                                Log.d(TAG, "not array");
-                                javascriptFunction = "javascript:(" + javascriptNoComments + ")(" + info + ");";
-                            }
-                        }
-                    } else {
-                        javascriptFunction = javascriptFunction + " \n myMethod();";
-                    }
-                    Log.d(TAG, javascriptFunction);
-                    mWebView.loadUrl(javascriptFunction);
-                } catch (Exception e) {
-                    Log.d(TAG, "exception", e);
-                }
+                Log.d(TAG, "Javascript: " + sb.toString());
+                mWebView.loadUrl(sb.toString());
             }
         });
     }

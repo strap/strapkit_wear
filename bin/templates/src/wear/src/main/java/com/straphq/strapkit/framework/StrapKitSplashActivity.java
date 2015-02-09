@@ -15,7 +15,7 @@ import com.google.android.gms.wearable.Wearable;
 import com.straphq.strapkit.framework.messaging.StrapKitWearListener;
 
 
-public class StrapKitSplashActivity extends Activity implements GoogleApiClient.OnConnectionFailedListener {
+public class StrapKitSplashActivity extends Activity {
 
 
     public static final String READY_TO_CLOSE_FILTER = "com.straphq.strapkit.framework.READY_TO_CLOSE_FILTER";
@@ -26,7 +26,6 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
     private Boolean mIsReadyToClose = false;
     private Boolean mTimeHasPassed = false;
     private Handler mHandler = new Handler();
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +33,6 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
         setContentView(R.layout.activity_splash);
 
         ((StrapKitApplication) getApplication()).setHasShownSplash(false);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this.getApplicationContext())
-                .addApi(Wearable.API)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
 
         Intent intent = new Intent(this, StrapKitWearListener.class);
         startService(intent);
@@ -60,7 +53,7 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
 
         Intent intent = new Intent();
         intent.setAction(GET_APP_INFO_FILTER);
-        sendStickyBroadcast(intent);
+        sendBroadcast(intent);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(READY_TO_CLOSE_FILTER);
@@ -89,26 +82,5 @@ public class StrapKitSplashActivity extends Activity implements GoogleApiClient.
             ((StrapKitApplication) getApplication()).finishedSplashPage();
             finish();
         }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        try {
-            connectionResult.startResolutionForResult(this, 1);
-        } catch (Exception e) {
-            Log.d(TAG, "failed");
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
     }
 }

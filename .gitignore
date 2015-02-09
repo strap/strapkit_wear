@@ -5,4 +5,6 @@ local.properties
 .DS_Store
 build
 defaults.xml
+strapkit_plugins.json
+.idea
 !bin/templates/scripts/strapkit/build

@@ -127,9 +127,18 @@ public class StrapKitMessageService extends Service implements DataApi.DataListe
     public void onDataChanged(DataEventBuffer dataEvents) {
 
         for (DataEvent event : dataEvents) {
-            Log.d(TAG, "uri: " + event.getDataItem().getUri().getPathSegments().get(0));
+            String path = event.getDataItem().getUri().getPathSegments().get(0);
+            Log.d(TAG, "uri: " + path);
             DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
             DataMap map = dataMapItem.getDataMap();
+
+            switch (path){
+                case "callback":
+                    mJsInterface.sendCallback(map);
+                    break;
+                default:
+                    break;
+            }
 
 
         }
