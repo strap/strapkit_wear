@@ -6,5 +6,5 @@ local.properties
 build
 defaults.xml
 strapkit_plugins.json
-.idea
+.idea/
 !bin/templates/scripts/strapkit/build
